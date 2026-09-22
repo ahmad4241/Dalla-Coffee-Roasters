@@ -71,32 +71,63 @@
   }
 
   // ---------- cart ----------
-  var cart={};
+  var cart={}, cartSum=0, cartIds=[];
   try{cart=JSON.parse(localStorage.getItem('dalla-cart')||'{}')||{};}catch(e){cart={};}
   function save(){try{localStorage.setItem('dalla-cart',JSON.stringify(cart));}catch(e){}}
   function count(){var n=0;for(var k in cart)n+=cart[k];return n;}
+  var WA_NUMBER='9647850485542'; // the shop's WhatsApp number, international format without + or spaces
+  var PLAN_PRICE={'Every week':60000,'Every 2 weeks':32000,'Every month':17000};
+  function pid(k){return k.split('|')[0];} function opt(k){return k.split('|')[1]||'';}
+  function priceOf(k){var p=byId[pid(k)]; return pid(k)==='roast-club'&&PLAN_PRICE[opt(k)]?PLAN_PRICE[opt(k)]:p.price;}
   function renderCart(){
     var n=count(), c=$('#cartCount'); c.textContent=n; c.dataset.empty=n?0:1;
     $('#cartBtn').setAttribute('aria-label','Open cart, '+n+' item'+(n===1?'':'s'));
-    var ids=Object.keys(cart).filter(function(k){return byId[k]&&cart[k]>0;}), sum=0;
-    $('#lines').innerHTML=ids.length?ids.map(function(k){var p=byId[k]; sum+=p.price*cart[k];
-      return '<div class="line"><div class="thumb"><img src="'+IMG[p.img]+'" alt=""></div><div><strong>'+p.name+'</strong><small>'+money(p.price)+'</small><br><button class="rm" data-rm="'+k+'">Remove</button></div><div class="qty"><button data-dq="-1" data-id="'+k+'" aria-label="Fewer">−</button><output>'+cart[k]+'</output><button data-dq="1" data-id="'+k+'" aria-label="More">+</button></div></div>';}).join(''):'<p class="empty">Your cart is empty. Start with a bag of House Blend.</p>';
-    $('#sum').textContent=money(sum); $('#checkout').disabled=!ids.length;
+    var ids=Object.keys(cart).filter(function(k){return byId[pid(k)]&&cart[k]>0;}), sum=0;
+    $('#lines').innerHTML=ids.length?ids.map(function(k){var p=byId[pid(k)], pr=priceOf(k); sum+=pr*cart[k];
+      return '<div class="line"><div class="thumb"><img src="'+IMG[p.img]+'" alt=""></div><div><strong>'+p.name+'</strong>'+(opt(k)?'<small class="opt">'+opt(k)+'</small>':'')+'<small>'+money(pr)+'</small><br><button class="rm" data-rm="'+k+'">Remove</button></div><div class="qty"><button data-dq="-1" data-id="'+k+'" aria-label="Fewer">−</button><output>'+cart[k]+'</output><button data-dq="1" data-id="'+k+'" aria-label="More">+</button></div></div>';}).join(''):'<p class="empty">Your cart is empty. Start with a bag of House Blend.</p>';
+    $('#sum').textContent=money(sum); $('#checkout').setAttribute('aria-disabled',!ids.length); $('#waForm').hidden=!ids.length; cartSum=sum; cartIds=ids; if(window.__waUpdate) window.__waUpdate();
   }
   function add(id,n){cart[id]=(cart[id]||0)+n; save(); renderCart();}
   document.addEventListener('click',function(e){
     var a=e.target.closest('[data-add]');
-    if(a){ var n=a.hasAttribute('data-useqty')?qty:1; add(a.dataset.add,n);
+    if(a){ var n=a.hasAttribute('data-useqty')?qty:1, key=a.dataset.add, pp=byId[key];
+      if(key==='roast-club'){var pb=$('.plans button[aria-pressed="true"]'); key+='|'+(pb?pb.textContent:'Every 2 weeks');}
+      else if(pp&&pp.cat==='Coffee'){var gs=a.hasAttribute('data-useqty')&&$('#grindSel'); key+='|'+(gs?gs.value:'Whole bean');}
+      add(key,n);
       var ok=$('#added'); if(a.hasAttribute('data-useqty')&&ok){ok.classList.add('on');clearTimeout(ok._t);ok._t=setTimeout(function(){ok.classList.remove('on');},2200);} else openCart(); return; }
     var d=e.target.closest('[data-dq]'); if(d){var id=d.dataset.id; cart[id]=Math.max(0,(cart[id]||0)+ +d.dataset.dq); if(!cart[id])delete cart[id]; save(); renderCart(); return;}
     var r=e.target.closest('[data-rm]'); if(r){delete cart[r.dataset.rm]; save(); renderCart();}
   });
   var lastFocus=null;
   function openCart(){lastFocus=document.activeElement; $('#drawer').classList.add('on'); $('#scrim').classList.add('on'); $('#drawer').setAttribute('aria-hidden','false'); $('#closeCart').focus();}
-  function closeCart(){$('#drawer').classList.remove('on'); $('#scrim').classList.remove('on'); $('#drawer').setAttribute('aria-hidden','true'); $('#demoMsg').classList.remove('on'); if(lastFocus)lastFocus.focus();}
+  function closeCart(){$('#drawer').classList.remove('on'); $('#scrim').classList.remove('on'); $('#drawer').setAttribute('aria-hidden','true'); if(lastFocus)lastFocus.focus();}
   $('#cartBtn').addEventListener('click',openCart); $('#closeCart').addEventListener('click',closeCart); $('#scrim').addEventListener('click',closeCart);
   addEventListener('keydown',function(e){if(e.key==='Escape'&&$('#drawer').classList.contains('on'))closeCart();});
-  $('#checkout').addEventListener('click',function(){$('#demoMsg').classList.add('on');});
+  var mode='delivery';
+  $$('#waForm .seg button').forEach(function(b){b.addEventListener('click',function(){
+    mode=b.dataset.mode; $$('#waForm .seg button').forEach(function(x){x.setAttribute('aria-pressed',x===b);});
+    $('#waAddrF').hidden=mode!=='delivery'; $('#waFee').textContent=mode==='delivery'?'Free delivery in Karbala over IQD 40,000, otherwise IQD 3,000. Pay cash on delivery.':'Ready in about 15 minutes at the bar, Street 60. Pay when you collect.';});});
+  function need(id,msg){var i=$('#'+id), f=i.closest('.field'), bad=!i.value.trim(); f.classList.toggle('bad',bad); f.querySelector('.err').textContent=bad?msg:''; return !bad;}
+  function waText(){
+    var fee=mode==='delivery'&&cartSum<40000?3000:0, L=['Hello Dalla, I would like to order:',''];
+    cartIds.forEach(function(k){var p=byId[pid(k)]; L.push('• '+cart[k]+' × '+p.name+(opt(k)?' ('+opt(k)+')':'')+' — '+money(priceOf(k)*cart[k]));});
+    L.push('','Subtotal: '+money(cartSum));
+    if(mode==='delivery'){L.push('Delivery: '+(fee?money(fee):'Free'),'Total: '+money(cartSum+fee),'','Name: '+$('#waName').value.trim(),'Deliver to: '+$('#waAddr').value.trim());}
+    else {L.push('Total: '+money(cartSum),'','Name: '+$('#waName').value.trim(),'Pick up at the bar');}
+    if($('#waNote').value.trim()) L.push('Note: '+$('#waNote').value.trim());
+    L.push('','Payment: cash');
+    return L.join('\n');
+  }
+  function waUpdate(){ $('#checkout').href='https://wa.me/'+WA_NUMBER+'?text='+encodeURIComponent(waText()); }
+  window.__waUpdate=waUpdate;
+  ['waName','waAddr','waNote'].forEach(function(id){$('#'+id).addEventListener('input',waUpdate);});
+  $$('#waForm .seg button').forEach(function(b){b.addEventListener('click',waUpdate);});
+  $('#checkout').addEventListener('click',function(e){
+    if(!cartIds.length){e.preventDefault(); return;}
+    var ok=need('waName','Please add your name.'); if(mode==='delivery') ok=need('waAddr','Please add where we should deliver.')&&ok;
+    if(!ok){ e.preventDefault(); (($('#waName').value.trim())?$('#waAddr'):$('#waName')).focus(); return; }
+    waUpdate(); // the link itself opens WhatsApp
+  });
   renderCart();
 
   // ---------- mobile menu ----------
