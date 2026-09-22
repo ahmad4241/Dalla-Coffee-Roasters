@@ -30,3 +30,4 @@ Open `01-Code/index.html` in a browser. Keep the `images` folder next to it.
 - **v17** phone fixes: no fade over the machine, bigger machine, closer pour shot
 - **v18** sharp beans in the hopper, a real bean pour (beans land and stay on the pile) and a true reverse when scrolling up
 - **v19** order on WhatsApp: the cart sends the order (items, grind, delivery or pickup, name, address) to the shop's WhatsApp
+- **v20** link preview: share image, title, description and site icon for WhatsApp, Instagram and browsers
