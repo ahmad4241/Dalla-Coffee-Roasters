@@ -352,3 +352,23 @@ h1[tabindex="-1"]:focus{outline:none}
   .more,.club{grid-template-columns:1fr}
 }
 @media (max-width:560px){.menu-grid,.coffees{grid-template-columns:1fr}}
+
+/* ---------- v16: one visual world + cinematic hero ---------- */
+.pin{background:#E8D3B8}
+.story{background:#E8D3B8}
+.nav.over-hero{background:rgba(232,211,184,.92);box-shadow:none;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.pin::after{content:"";position:absolute;left:0;right:0;bottom:0;height:10%;background:linear-gradient(transparent,#E8D3B8);pointer-events:none;z-index:2}
+.set{position:absolute;inset:-70% -80%;pointer-events:none}
+.set .wall{position:absolute;inset:0;background:#E8D3B8}
+.set .sun{position:absolute;inset:0;background:linear-gradient(118deg,transparent 0 30%,rgba(255,244,226,.55) 33% 38%,transparent 41% 44%,rgba(255,244,226,.45) 46% 49%,transparent 52%),linear-gradient(118deg,transparent 0 22%,rgba(255,240,220,.25) 24% 27%,transparent 30%);filter:blur(22px);mix-blend-mode:soft-light;opacity:.9}
+.cast{position:absolute;left:52%;top:62%;width:58%;height:26%;background:radial-gradient(60% 60% at 30% 40%,rgba(70,40,18,.32),rgba(70,40,18,0) 70%);transform:skewX(-38deg);transform-origin:0 100%;filter:blur(14px);pointer-events:none}
+.contact{position:absolute;left:14%;top:84.5%;width:76%;height:6%;background:radial-gradient(50% 50% at 50% 50%,rgba(55,32,15,.42),rgba(55,32,15,0) 72%);filter:blur(6px);pointer-events:none}
+.key{position:absolute;left:52%;top:52%;width:28%;height:32%;background:radial-gradient(50% 50% at 50% 50%,rgba(255,214,160,.55),rgba(255,214,160,0) 70%);mix-blend-mode:screen;opacity:0;pointer-events:none;transition:opacity .4s}
+.vig{position:absolute;inset:0;pointer-events:none;z-index:1;background:radial-gradient(120% 95% at 58% 52%,transparent 52%,rgba(62,36,16,.32) 100%);opacity:.35}
+.fg{position:absolute;pointer-events:none;z-index:3;will-change:transform,opacity;opacity:0}
+.fg img{width:100%;filter:blur(11px) brightness(.85) saturate(1.05)}
+.fg.a{width:12vmin;left:-4vmin;bottom:4vh}
+.fg.b{width:10vmin;right:4vmin;top:14vh}
+.fg.c{width:10vmin;right:-3vmin;bottom:-3vh}
+@media (max-width:900px){.fg.b{display:none}}
+@media (prefers-reduced-motion:reduce){.fg{display:none}}
