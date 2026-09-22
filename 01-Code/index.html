@@ -35,7 +35,7 @@
 </header>
 
 <main id="top" data-page="home">
-  <section class="story" id="story" aria-label="Meet the machine">
+  <section class="story" id="story" aria-label="How a cup is made">
     <div class="pin">
       <div class="veil" id="veil" aria-hidden="true"></div>
       <div class="pin-grid">
@@ -61,6 +61,8 @@
 
         <div class="scene" id="scene">
           <div class="lens" id="lens"><div class="cam" id="cam">
+            <div class="set" aria-hidden="true"><i class="wall"></i><i class="sun"></i></div>
+            <div class="cast" aria-hidden="true"></div><div class="contact" aria-hidden="true"></div>
             <img class="mach" id="mach" src="images/machine.webp" alt="Matte-black espresso machine with a glass bean hopper and built-in grinder">
             <svg class="fx" viewBox="0 0 1024 1024" aria-hidden="true">
               <defs>
@@ -95,7 +97,7 @@
               <!-- lid -->
               <image id="lid" href="images/hopper-lid.webp" x="186" y="136" width="242" height="42"/>
               <!-- the two glasses that start under the spout -->
-              <g id="glasses">
+              <g id="glasses" style="display:none">
                 <image href="images/glasses-on-tray.webp" x="540" y="626" width="250" height="150"/>
               </g>
               <!-- black cup: photographed empty on this machine, the espresso rises inside it -->
@@ -127,6 +129,7 @@
                 <text id="scrG" x="396" y="481" font-size="8" fill="#c9d4df" text-anchor="end">0 g</text>
               </g>
             </svg>
+            <div class="key" id="key" aria-hidden="true"></div>
             <div class="rain" id="rain" aria-hidden="true"></div>
           </div></div>
 
@@ -136,9 +139,10 @@
 
           <div class="chip" data-chip="0" style="left:0;bottom:1%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10l-1 5H8z"/><path d="M8 8v4a4 4 0 0 0 8 0V8"/><path d="M12 16v5"/></svg>Roasted every Tuesday</div>
           <div class="chip" data-chip="1" style="right:-2%;top:3%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="13" rx="2"/><path d="M8 21h8"/></svg>Ground to order</div>
-          <div class="chip" data-chip="2" style="right:-2%;bottom:7%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6"/><path d="M8 9h8l-1 4H9z"/><path d="M6 17h12"/><path d="M9 21h6"/></svg>Steel group head</div>
         </div>
       </div>
+      <div class="vig" id="vig" aria-hidden="true"></div>
+      <div class="fg a" aria-hidden="true"><img src="images/bean-4.webp" alt=""></div><div class="fg b" aria-hidden="true"><img src="images/bean-7.webp" alt=""></div><div class="fg c" aria-hidden="true"><img src="images/bean-4.webp" alt=""></div>
       <div class="progress" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
       <div class="hint" id="hint">Scroll</div>
       <template id="beanSrc"><img src="images/bean-5.webp" alt=""><img src="images/bean-7.webp" alt=""><img src="images/bean-4.webp" alt=""></template>
