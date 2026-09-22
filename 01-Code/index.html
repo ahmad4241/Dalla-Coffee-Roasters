@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dalla Coffee Roasters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="#/" aria-label="Dalla Coffee Roasters, home">Dalla</a>
+    <nav class="links" aria-label="Main">
+      <a href="#/" data-route="home">Home</a>
+      <a href="#/shop" data-route="shop">Shop</a>
+      <a href="#/menu" data-route="menu">Menu</a>
+      <a href="#/about" data-route="about">Our story</a>
+      <a href="#/contact" data-route="contact">Visit</a>
+    </nav>
+    <button class="cart-btn" id="cartBtn" type="button" aria-label="Open cart" aria-controls="drawer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="count" id="cartCount" data-empty="1">0</span></button>
+    <a class="btn btn-dark nav-cta" href="#/shop">Shop coffee</a>
+    <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mnav"><span></span><span></span></button>
+  </div>
+  <nav class="mnav" id="mnav" aria-label="Mobile" hidden>
+    <a href="#/" data-route="home">Home</a>
+      <a href="#/shop" data-route="shop">Shop</a>
+      <a href="#/menu" data-route="menu">Menu</a>
+      <a href="#/about" data-route="about">Our story</a>
+      <a href="#/contact" data-route="contact">Visit</a>
+  </nav>
+</header>
+
+<main id="top" data-page="home">
+  <section class="story" id="story" aria-label="Meet the machine">
+    <div class="pin">
+      <div class="veil" id="veil" aria-hidden="true"></div>
+      <div class="pin-grid">
+        <div class="copy">
+          <div class="stage-copy on" data-stage="0">
+            <p class="kicker">Dalla Coffee Roasters</p>
+            <h1>Roasted in Karbala. Poured with care.</h1>
+            <p class="lede">Specialty coffee, roasted every Tuesday. Scroll to watch a cup being made.</p>
+            <div class="cta"><a class="btn btn-dark" href="#/shop">Shop coffee</a><a class="btn btn-ghost" href="#/menu">See the menu</a></div>
+          </div>
+          <div class="stage-copy" data-stage="1">
+            <p class="kicker">Fresh beans</p>
+            <h2>Roasted this week.</h2>
+            <p class="lede">Small batches every Tuesday, ground to order for your machine, your dallah or your V60.</p>
+          </div>
+          <div class="stage-copy" data-stage="2">
+            <p class="kicker">The pour</p>
+            <h2>Then comes the crema.</h2>
+            <p class="lede">A double shot of House Blend: 18 grams in, 36 out, about 27 seconds.</p>
+            <div class="cta"><a class="btn btn-dark" href="#/product/house-blend">Order a bag</a></div>
+          </div>
+        </div>
+
+        <div class="scene" id="scene">
+          <div class="lens" id="lens"><div class="cam" id="cam">
+            <img class="mach" id="mach" src="images/machine.webp" alt="Matte-black espresso machine with a glass bean hopper and built-in grinder">
+            <svg class="fx" viewBox="0 0 1024 1024" aria-hidden="true">
+              <defs>
+                <clipPath id="glass"><path d="M200 172 L410 172 L410 214 L403 244 L390 268 L374 290 L358 299 L252 299 L234 289 L217 267 L205 242 L200 212 Z"/></clipPath>
+                <clipPath id="fillc"><path id="fillPath" d="M190 320 L420 320 L420 330 L190 330 Z"/></clipPath>
+                <linearGradient id="glassHi" x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="0" stop-color="#fff" stop-opacity=".0"/><stop offset=".12" stop-color="#fff" stop-opacity=".28"/><stop offset=".2" stop-color="#fff" stop-opacity="0"/><stop offset=".86" stop-color="#fff" stop-opacity="0"/><stop offset=".93" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+                </linearGradient>
+                <radialGradient id="bowl" cx=".5" cy=".62" r=".6"><stop offset="0" stop-color="#2b2420"/><stop offset=".8" stop-color="#15110f"/><stop offset="1" stop-color="#0b0908"/></radialGradient>
+                <linearGradient id="sg" x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="0" stop-color="#4d250b"/><stop offset=".45" stop-color="#b06d2d"/><stop offset=".6" stop-color="#e0a566"/><stop offset="1" stop-color="#5a2c0e"/>
+                </linearGradient>
+                <radialGradient id="shadowG" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#140c07" stop-opacity=".5"/><stop offset="1" stop-color="#140c07" stop-opacity="0"/></radialGradient>
+                <clipPath id="mouthC"><ellipse cx="627" cy="670.4" rx="47.4" ry="27.9"/></clipPath>
+                <clipPath id="fallC"><rect x="0" y="-200" width="1024" height="374"/><path d="M200 172 L410 172 L410 214 L403 244 L390 268 L374 290 L358 299 L252 299 L234 289 L217 267 L205 242 L200 212 Z"/></clipPath>
+                <filter id="mblur" x="-50%" y="-50%" width="200%" height="200%"><feColorMatrix type="matrix" values=".62 0 0 0 0  0 .6 0 0 0  0 0 .6 0 0  0 0 0 1 0"/><feGaussianBlur stdDeviation="0.35 2.2"/></filter>
+                <image id="beanA" href="images/bean-4.webp" width="24" height="24" x="-12" y="-12"/>
+                <image id="beanB" href="images/bean-7.webp" width="21" height="24" x="-10.5" y="-12"/>
+                <clipPath id="levelC"><rect id="levelR" x="580" y="672" width="160" height="0"/></clipPath>
+                <linearGradient id="sgv" gradientUnits="userSpaceOnUse" x1="0" y1="611" x2="0" y2="668">
+                  <stop offset="0" stop-color="#241005"/><stop offset=".4" stop-color="#5e2f10"/><stop id="sgEnd" offset="1" stop-color="#9a5a24"/>
+                </linearGradient>
+                <radialGradient id="scrGlow" cx=".5" cy=".35" r=".8"><stop offset="0" stop-color="#3b5a78" stop-opacity=".35"/><stop offset="1" stop-color="#3b5a78" stop-opacity="0"/></radialGradient>
+                <filter id="soft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5"/></filter>
+              </defs>
+              <!-- beans filling the hopper -->
+              <g clip-path="url(#glass)"><g clip-path="url(#fillc)">
+                <image href="images/hopper-beans.webp" x="195" y="170" width="220" height="133" preserveAspectRatio="none" opacity=".97"/>
+              </g></g>
+              <g id="falling" clip-path="url(#fallC)" filter="url(#mblur)"></g>
+              <rect x="200" y="172" width="210" height="128" fill="url(#glassHi)" clip-path="url(#glass)"/>
+              <!-- lid -->
+              <image id="lid" href="images/hopper-lid.webp" x="186" y="136" width="242" height="42"/>
+              <!-- the two glasses that start under the spout -->
+              <g id="glasses">
+                <image href="images/glasses-on-tray.webp" x="540" y="626" width="250" height="150"/>
+              </g>
+              <!-- black cup: photographed empty on this machine, the espresso rises inside it -->
+              <ellipse id="cupShadow" cx="660" cy="763" rx="80" ry="7" fill="url(#shadowG)" opacity="0"/>
+              <g id="cup" opacity="0">
+                <image href="images/cup-empty.webp" x="584" y="636" width="196" height="130"/>
+                <g id="liqG" clip-path="url(#levelC)">
+                  <image href="images/cup-espresso-surface.webp" x="590" y="640" width="142" height="32"/>
+                  <ellipse id="tint" cx="661" cy="656" rx="70" ry="14" fill="#2c1407" opacity=".55"/>
+                  <g id="ripples" fill="none" stroke="#e9bd84" stroke-width=".8"></g>
+                </g>
+              </g>
+              <path id="streamA" fill="url(#sgv)"/><path id="streamB" fill="url(#sgv)"/>
+              <ellipse id="dropA" rx="1.3" ry="2" fill="#6b3510" opacity="0"/>
+              <!-- portafilter handle sits in front of the cups -->
+              <image href="images/portafilter-handle.webp" x="656" y="526" width="96" height="144"/>
+              <g id="steam" filter="url(#soft)" fill="none" stroke="#fffaf2" stroke-linecap="round" stroke-width="8"><path/><path/><path/></g>
+              <!-- the machine's own touch screen shows the shot -->
+              <g id="screen" font-family="Manrope, system-ui, sans-serif">
+                <rect x="274" y="406" width="130" height="84" rx="3" fill="#141b24"/>
+                <rect x="274" y="406" width="130" height="84" rx="3" fill="url(#scrGlow)"/>
+                <text id="scrState" x="282" y="420" font-size="7.5" fill="#a9bccd" font-weight="600">Ready</text>
+                <text x="396" y="420" font-size="7.5" fill="#a9bccd" text-anchor="end">Double shot</text>
+                <text id="scrTime" x="339" y="453" font-size="25" fill="#f3e7d8" font-weight="600" text-anchor="middle">0:00</text>
+                <rect x="282" y="462" width="114" height="3" rx="1.5" fill="#ffffff" fill-opacity=".14"/>
+                <rect id="scrBar" x="282" y="462" width="0" height="3" rx="1.5" fill="#d9a06a"/>
+                <text x="282" y="481" font-size="8" fill="#c9d4df">93°C</text>
+                <text x="339" y="481" font-size="8" fill="#c9d4df" text-anchor="middle">9 bar</text>
+                <text id="scrG" x="396" y="481" font-size="8" fill="#c9d4df" text-anchor="end">0 g</text>
+              </g>
+            </svg>
+            <div class="rain" id="rain" aria-hidden="true"></div>
+          </div></div>
+
+          <div class="spray" id="spray" aria-hidden="true"></div>
+          <div class="bean" data-depth="-1" style="--w:9%;right:6%;top:8%;--t:7s"><img src="images/bean-4.webp" alt=""></div>
+          <div class="bean" data-depth="0.8" style="--w:11%;right:2%;bottom:18%;--t:6.2s"><img src="images/bean-5.webp" alt=""></div>
+
+          <div class="chip" data-chip="0" style="left:0;bottom:1%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10l-1 5H8z"/><path d="M8 8v4a4 4 0 0 0 8 0V8"/><path d="M12 16v5"/></svg>Roasted every Tuesday</div>
+          <div class="chip" data-chip="1" style="right:-2%;top:3%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="13" rx="2"/><path d="M8 21h8"/></svg>Ground to order</div>
+          <div class="chip" data-chip="2" style="right:-2%;bottom:7%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6"/><path d="M8 9h8l-1 4H9z"/><path d="M6 17h12"/><path d="M9 21h6"/></svg>Steel group head</div>
+        </div>
+      </div>
+      <div class="progress" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+      <div class="hint" id="hint">Scroll</div>
+      <template id="beanSrc"><img src="images/bean-5.webp" alt=""><img src="images/bean-7.webp" alt=""><img src="images/bean-4.webp" alt=""></template>
+    </div>
+  </section>
+
+  <section class="block" id="coffee">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <h2>Our coffee</h2>
+        <p>Three roasts and one rule: nothing older than three weeks. <a href="#/shop">Shop all coffee</a></p>
+      </div>
+      <div class="coffees" id="homeCoffees"></div>
+    </div>
+  </section>
+
+  <section class="block" id="bar" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <h2>At the bar</h2>
+        <p>Every drink is made with this week's House Blend. <a href="#/menu">See the full menu</a></p>
+      </div>
+      <div class="coffees" id="homeMenu"></div>
+    </div>
+  </section>
+
+  <section class="block" id="club" style="padding-top:0">
+    <div class="wrap">
+      <div class="club reveal">
+        <div class="trio" aria-hidden="true"><div></div><div></div><div></div></div>
+        <div>
+          <p class="kicker">Roast Club</p>
+          <h2>Fresh coffee, on repeat.</h2>
+          <ul><li>Two bags from that week's roast, never older</li><li>Whole bean or ground for your brewer</li><li>Skip, pause or cancel any time</li></ul>
+          <div class="plans" role="group" aria-label="Delivery frequency"><button type="button" data-d="7" aria-pressed="false">Every week</button><button type="button" data-d="14" aria-pressed="true">Every 2 weeks</button><button type="button" data-d="30" aria-pressed="false">Every month</button></div>
+          <p class="price-line" id="clubPrice">IQD 32,000 <small>per delivery, free delivery in Karbala</small></p>
+          <button class="btn btn-dark" type="button" data-add="roast-club">Start the Roast Club</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<main data-page="shop" hidden>
+  <div class="wrap page">
+    <div class="page-head">
+      <h1>Shop coffee</h1>
+      <p>Roasted every Tuesday in Karbala. Whole bean or ground to order for your espresso machine, dallah or V60.</p>
+    </div>
+    <div class="filters" role="group" aria-label="Filter products">
+      <button type="button" data-f="All" aria-pressed="true">All</button>
+      <button type="button" data-f="Coffee" aria-pressed="false">Coffee beans</button>
+      <button type="button" data-f="Drinks to go" aria-pressed="false">Drinks to go</button>
+      <button type="button" data-f="Subscription" aria-pressed="false">Subscription</button>
+    </div>
+    <div class="grid" id="grid"></div>
+    <p class="caption" style="margin-top:28px">Want coffee on repeat? <a href="#club">Join the Roast Club</a> and get fresh bags delivered every two weeks.</p>
+  </div>
+</main>
+
+<main data-page="product" hidden>
+  <div class="wrap page" id="pview"></div>
+</main>
+
+<main data-page="menu" hidden>
+  <div class="wrap page">
+    <div class="page-head">
+      <h1>At the bar</h1>
+      <p>Every drink is made with our House Blend, roasted this week. Oat and almond milk at no extra charge.</p>
+    </div>
+    <div class="menu-grid" id="menuGrid"></div>
+    <div class="more">
+      <h2>Also on the menu</h2>
+      <ul class="list">
+        <li><strong>Americano</strong><b>IQD 4,000</b><span>Double shot, hot water.</span></li>
+        <li><strong>Cortado</strong><b>IQD 4,500</b><span>Equal parts espresso and warm milk.</span></li>
+        <li><strong>Spanish Latte</strong><b>IQD 6,000</b><span>Espresso, milk and condensed milk, hot or iced.</span></li>
+        <li><strong>V60 Pour-over</strong><b>IQD 7,000</b><span>Ethiopia Guji, brewed by hand.</span></li>
+        <li><strong>Arabic Coffee</strong><b>IQD 3,000</b><span>Light roast with cardamom, served from the dallah.</span></li>
+        <li><strong>Hot Chocolate</strong><b>IQD 5,000</b><span>Dark chocolate and steamed milk.</span></li>
+      </ul>
+    </div>
+  </div>
+</main>
+
+<main data-page="about" hidden>
+  <div class="wrap page">
+    <p class="kicker">Our story</p>
+    <div class="page-head" style="margin-bottom:28px"><h1>We roast on Tuesdays.</h1></div>
+    <p class="about-lead">Dalla started with a small drum roaster and one idea: the coffee you drink at home should be as fresh as the coffee we pour at the bar. We named it after the pot every Iraqi home keeps for guests.</p>
+    <div class="two">
+      <h2>Why the dallah</h2>
+      <div>
+        <p>In Iraq, coffee is how you say welcome. The dallah comes out for guests, for weddings, for the long evenings when nobody wants to leave. We wanted a name that carries that.</p>
+        <p>What we do is specialty coffee: beans we buy by origin, roast in small batches and taste every week. Old welcome, new way of brewing.</p>
+      </div>
+    </div>
+    <div class="two">
+      <h2>From bean to cup</h2>
+      <ol class="steps">
+        <li><b>1</b><div><strong>Roast</strong><span>Every Tuesday, in small batches, so nothing sits on a shelf for weeks.</span></div></li>
+        <li><b>2</b><div><strong>Rest</strong><span>Beans rest for five days before they're sold. Espresso tastes best once the gas settles.</span></div></li>
+        <li><b>3</b><div><strong>Grind and pour</strong><span>Ground to order, for your machine, your dallah or your V60. At the bar: 18 grams in, 36 out, about 27 seconds.</span></div></li>
+      </ol>
+    </div>
+    <div class="two">
+      <div>
+        <div class="still"><img src="images/latte.webp" alt="A latte on a brown saucer at the Dalla bar" loading="lazy"></div>
+        <p class="caption">A latte at the bar, House Blend.</p>
+      </div>
+      <div>
+        <h2 style="margin-bottom:18px">How we got here</h2>
+        <ol class="timeline">
+          <li><time>2019</time><span>First roast, on a 1 kg drum, in a shared kitchen.</span></li>
+          <li><time>2021</time><span>Opened our first bar in Karbala.</span></li>
+          <li><time>2023</time><span>Started selling our beans online, ground to order.</span></li>
+          <li><time>2025</time><span>Launched the Roast Club subscription.</span></li>
+          <li><time>2026</time><span>Moved to a bigger roaster. Same Tuesdays.</span></li>
+        </ol>
+      </div>
+    </div>
+    <div class="cta"><a class="btn btn-dark" href="#/shop">Shop our coffee</a><a class="btn btn-ghost" href="#/contact">Visit the bar</a></div>
+  </div>
+</main>
+
+<main data-page="contact" hidden>
+  <div class="wrap page">
+    <div class="page-head">
+      <h1>Visit us.</h1>
+      <p>Come for a coffee, pick up a bag, or send us a question about an order or wholesale. We reply within one working day.</p>
+    </div>
+    <div class="contact">
+      <form class="form" id="contactForm" novalidate>
+        <div class="two-col">
+          <div class="field"><label for="cName">Name</label><input id="cName" name="name" autocomplete="name" required><span class="err" aria-live="polite"></span></div>
+          <div class="field"><label for="cEmail">Email</label><input id="cEmail" name="email" type="email" autocomplete="email" required><span class="err" aria-live="polite"></span></div>
+        </div>
+        <div class="field"><label for="cTopic">Topic</label>
+          <select id="cTopic" name="topic"><option>An order</option><option>Roast Club</option><option>Wholesale for cafés and offices</option><option>Events and catering</option><option>Something else</option></select></div>
+        <div class="field"><label for="cMsg">Message</label><textarea id="cMsg" name="message" required></textarea><span class="err" aria-live="polite"></span></div>
+        <div><button class="btn btn-dark" type="submit">Send message</button></div>
+        <div class="sent" id="sent" role="status">Thanks, your message is on its way. We'll reply within one working day.</div>
+      </form>
+      <div class="info">
+        <div><h3>The bar and roastery</h3><p>Street 60, near the city centre<br>Karbala, Iraq</p></div>
+        <div><h3>Opening hours</h3><div class="hours"><div><span>Saturday to Thursday</span><span>8:00 – 23:00</span></div><div><span>Friday</span><span>14:00 – 23:00</span></div></div></div>
+        <div><h3>Talk to us</h3><p><a href="mailto:hello@dalla.coffee">hello@dalla.coffee</a><br><a href="tel:+9647800000000">+964 780 000 0000</a></p></div>
+      </div>
+    </div>
+    <section class="faq" id="faq" aria-labelledby="faqTitle">
+      <h2 id="faqTitle">Questions we hear a lot</h2>
+      <details><summary>How fresh is the coffee?</summary><p>We roast every Tuesday and sell within three weeks of roasting. The roast date is printed on every bag.</p></details>
+      <details><summary>Can you grind it for me?</summary><p>Yes, for free. Pick espresso, Turkish or Arabic, V60 and filter, or French press when you order. Whole beans stay fresh longest.</p></details>
+      <details><summary>Where do you deliver?</summary><p>Same-day delivery in Karbala for orders before 2 pm, and 2 to 4 days to Baghdad, Najaf, Basra and the rest of Iraq.</p></details>
+      <details><summary>How does the Roast Club work?</summary><p>Choose how often you want coffee. We send fresh bags from that week's roast. Skip, pause or cancel any time from your account.</p></details>
+      <details><summary>Do you supply cafés and offices?</summary><p>Yes. We roast for cafés, restaurants and offices, and we can help set up your espresso machine. Send us a message with Wholesale as the topic.</p></details>
+    </section>
+  </div>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="logo" href="#/" style="font-size:28px">Dalla</a>
+        <p>Specialty coffee roasted every Tuesday in Karbala. Poured at our bar, delivered to your door.</p>
+        <form class="news" id="newsForm" novalidate><label for="newsEmail" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Email for the roast-day newsletter</label><input id="newsEmail" type="email" placeholder="Your email" autocomplete="email"><button class="btn btn-dark" type="submit">Subscribe</button></form>
+        <div class="news-ok" id="newsOk" aria-live="polite"></div>
+      </div>
+      <div><h4>Shop</h4><ul><li><a href="#/shop">Coffee beans</a></li><li><a href="#club">Roast Club</a></li><li><a href="#/product/cold-brew">Cold brew</a></li></ul></div>
+      <div><h4>Dalla</h4><ul><li><a href="#/menu">Menu</a></li><li><a href="#/about">Our story</a></li><li><a href="#/contact">Visit the bar</a></li><li><a href="#/contact">Wholesale</a></li></ul></div>
+      <div><h4>Help</h4><ul><li><a href="#/contact">Delivery</a></li><li><a href="#/contact">Grind options</a></li><li><a href="#/contact">Contact</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year">2026</span> Dalla Coffee Roasters. Concept project: products and prices are for demonstration.</span>
+      <div class="pay" aria-label="Payment methods"><span>Cash on delivery</span><span>Visa</span><span>Mastercard</span><span>ZainCash</span></div>
+      <div class="social">
+        <a href="https://www.instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+        <a href="https://www.tiktok.com" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5"/><path d="M14 3c.5 3 2.5 5 5.5 5"/></svg></a>
+        <a href="https://www.facebook.com" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M15 3h-2a4 4 0 0 0-4 4v3H7v4h2v7h4v-7h3l1-4h-4V7a1 1 0 0 1 1-1h2z"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Your cart" aria-hidden="true">
+  <div class="drawer-head"><h2>Your cart</h2><button class="x" id="closeCart" type="button" aria-label="Close cart">×</button></div>
+  <div class="lines" id="lines"></div>
+  <div class="drawer-foot">
+    <div class="sum"><span>Subtotal</span><span id="sum">IQD 0</span></div>
+    <p class="note">Delivery is calculated at checkout. Free in Karbala over IQD 40,000.</p>
+    <button class="btn btn-dark" id="checkout" type="button">Checkout</button>
+    <div class="demo-msg" id="demoMsg" role="status">This is a design preview, so checkout is switched off. On the live store it runs through Shopify or a local payment gateway.</div>
+  </div>
+</aside>
+
+<div id="assets" hidden><img data-k="bag-terracotta" src="images/bag-terracotta.webp" alt=""><img data-k="bag-brown" src="images/bag-brown.webp" alt=""><img data-k="bag-green" src="images/bag-green.webp" alt=""><img data-k="latte" src="images/latte.webp" alt=""><img data-k="iced-latte" src="images/iced-latte.webp" alt=""><img data-k="latte-macchiato" src="images/latte-macchiato.webp" alt=""><img data-k="cappuccino" src="images/cappuccino.webp" alt=""><img data-k="espresso" src="images/espresso.webp" alt=""><img data-k="cold-brew" src="images/cold-brew.webp" alt=""></div>
+
+<script src="hero.js"></script>
+<script src="site.js"></script>
+</body>
+</html>
