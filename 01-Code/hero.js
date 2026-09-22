@@ -55,16 +55,45 @@
   var targetP=0,P=0,first=true,lastT=null,cur=-1,movedAt=0;
   var BUMPS=[5,8,4,7,9,5,8,6,4,9,7,5,8,6,9,4,7,8,5,6,9,7,5];
   var SX=631, SY0=611;
-  function apply(p){
+  // four stages on one scroll: beans in (0-.40), grind (.40-.62), pour (.62-1). The original timeline runs on p.
+  var G={g:0,a:0,w:0,stg:0,prevA:0,fwdT:-9,revT:-9,jit:0};
+  var GCAM_D=[1.95,33.2,57.8,47,50], GCAM_M=[1.5,33.3,57.8,46,67];
+  var doseBlurF=$('doseBlurF'), doseEl=$('dose'), doseCup=$('doseCup'), doseSh=$('doseSh'), doseFull=$('doseFull'), moundE=$('moundE'), groundsG=$('grounds'), dustG=$('dust');
+  function apply(P0){
+    var p, g;
+    if(P0<=.40){p=P0*1.25; g=0;} else if(P0<.62){p=.5; g=(P0-.40)/.22;} else {p=.5+(P0-.62)/.38*.5; g=1;}
+    G.g=g; G.a=clamp((g-.24)/.5,0,1);
+    G.w=ease(clamp(g/.14,0,1))*(1-ease(clamp((g-.8)/.2,0,1)));
+    G.stg=P0<.06?0:P0<.41?1:P0<.63?2:3;
+    G.boil=ease(clamp((P0-.425)/.07,0,1));
+    applyBase(p); applyGrind();
+  }
+  function applyGrind(){
+    var g=G.g, on=g>0&&g<1;
+    doseEl.style.display=on?'':'none'; if(!on) return;
+    // brought in from the camera side like a hand would: large, soft and low, settling onto the fork
+    var sm=function(t){return t*t*t*(t*(t*6-15)+10)};
+    var e=clamp(g/.22,0,1), ee=sm(e), a1=clamp(ee/.88,0,1), k=1-a1;
+    var sc=1+1.7*k*k, dx=-70*k, dy=520*k*k*(1.2-.2*k)-3*Math.sin(Math.PI*a1)*k+3.5*sm(clamp((ee-.88)/.12,0,1))-3.5, rot=-5*k, bl=2.6*k*k;
+    // picked up the same way: a small lift off the fork, then carried back toward the camera and away to the right
+    var x=clamp((g-.8)/.2,0,1), up=sm(clamp(x/.3,0,1)), c=sm(clamp((x-.22)/.78,0,1));
+    dy+=-5*up+420*c*c; dx+=260*c; sc*=1+1.5*c*c; rot+=5*c; bl+=2.4*c*c;
+    doseCup.setAttribute('transform','translate('+dx.toFixed(2)+' '+dy.toFixed(2)+') translate(340 648) scale('+sc.toFixed(4)+') rotate('+rot.toFixed(2)+') translate(-340 -648)');
+    doseBlurF.setAttribute('stdDeviation',bl.toFixed(2)); doseCup.setAttribute('filter',bl>.05?'url(#doseBlur)':'');
+    doseSh.setAttribute('opacity',(Math.pow(sm(clamp((ee-.75)/.25,0,1)),2)*(1-.6*up)*(1-clamp(x/.3,0,1))).toFixed(3));
+    var a=G.a; doseFull.style.display=a>0?'':'none';
+    moundE.setAttribute('rx',(4+33*Math.sqrt(a)).toFixed(2)); moundE.setAttribute('ry',(2+17.5*a).toFixed(2)); moundE.setAttribute('cy',(592-2.5*a).toFixed(2));
+  }
+  function applyBase(p){
     // hopper: lid lifts, beans pour in, lid closes
     var lidOpen=ease(clamp((p-.05)/.07,0,1))*(1-ease(clamp((p-.43)/.06,0,1)));
     lid.setAttribute('transform','translate(0,'+(-240*lidOpen).toFixed(1)+')'); lid.setAttribute('opacity',(1-clamp((lidOpen-.35)/.5,0,1)).toFixed(3));
-    var L=clamp((p-.12)/.3,0,1); st.L=L;
+    var L=clamp((p-.12)/.3,0,1); st.L=L; st.Lv=L*(1-.26*G.a);
     
-    var lvl=298-L*118, a=lvl+7, b=lvl-7-6*L;
+    var Lv=st.Lv, lvl=298-Lv*118, a=lvl+7, b=lvl-7-6*Lv;
     var dP='M190 320 L190 '+(lvl+7).toFixed(1);
     for(var q=0;q<BUMPS.length;q++){ // an uneven top made of bean-sized humps, heaped in the middle
-      var x0=190+q*10, xm=x0+5, x1=x0+10, cxn=(xm-305)/115, mound=(1-cxn*cxn)*(7+6*L);
+      var x0=190+q*10, xm=x0+5, x1=x0+10, cxn=(xm-305)/115, mound=(1-cxn*cxn)*(7+6*Lv);
       var yb=lvl+7-mound, yt=yb-BUMPS[q];
       dP+=' L'+x0+' '+yb.toFixed(1)+' Q'+xm+' '+yt.toFixed(1)+' '+x1+' '+yb.toFixed(1);
     }
@@ -78,6 +107,8 @@
     var K=mob?CAM_M:CAM_D, i=0; while(i<K.length-2&&p>K[i+1][0]) i++;
     var a0=K[i], a1=K[i+1], u=ease(clamp((p-a0[0])/(a1[0]-a0[0]),0,1)), L2=function(j){return a0[j]+(a1[j]-a0[j])*u};
     var s=L2(1), fx=L2(2), fy=L2(3), gx=L2(4), gy=L2(5);
+    if(G.w>0){var GC=mob?GCAM_M:GCAM_D, w=G.w; s+=(GC[0]-s)*w; fx+=(GC[1]-fx)*w; fy+=(GC[2]-fy)*w; gx+=(GC[3]-gx)*w; gy+=(GC[4]-gy)*w;}
+    if(G.jit>0&&!reduce){gx+=(Math.random()-.5)*.09*G.jit; gy+=(Math.random()-.5)*.09*G.jit;}
     var ox=gx-(50+(fx-50)*s), oy=gy-(50+(fy-50)*s);
     var ze=1+(mob?.08:.1)*focus*clamp((p-.7)/.08,0,1);
     if(ze>1.0001){var Ax=50+ox+(65-50)*s, Ay=50+oy+(14-50)*s; ox=Ax*(1-ze)+ze*(50+ox)-50; oy=Ay*(1-ze)+ze*(50+oy)-50; s=s*ze;}
@@ -99,7 +130,7 @@
       bn.style.opacity=(1-z).toFixed(3);
     });
     st.p=p;
-    var stg=p<.08?0:p<.53?1:2;
+    var stg=G.stg;
     if(stg!==cur){
       cur=stg;
       copies.forEach(function(el,i){el.classList.toggle('on',i===stg)});
@@ -130,11 +161,12 @@
     var filling=t-st.fillT<.35&&st.L<1, emptying=t-st.emptyT<.35&&st.L>0;
     if(!reduce&&t>=nextClump){
       if(filling){spawnPour(t,1+Math.floor(Math.random()*3)); nextClump=t+.06+Math.random()*.06;}
-      else if(emptying){var nn=2+Math.floor(Math.random()*3); for(var q=0;q<nn;q++){var rx=292+Math.random()*28; rise(t,rx,surfaceY(rx,st.L)+2,null,.72+Math.random()*.22,Math.random()*360);} nextClump=t+.06+Math.random()*.06;}
+      else if(emptying){var nn=2+Math.floor(Math.random()*3); for(var q=0;q<nn;q++){var rx=292+Math.random()*28; rise(t,rx,surfaceY(rx,st.Lv)+2,null,.72+Math.random()*.22,Math.random()*360);} nextClump=t+.06+Math.random()*.06;}
     }
     // resting beans: covered as the pile rises, lifted back out when it drops
-    for(var ri=rest.length-1;ri>=0;ri--){var rb=rest[ri], sy=surfaceY(rb.x,st.L);
+    for(var ri=rest.length-1;ri>=0;ri--){var rb=rest[ri], sy=surfaceY(rb.x,st.Lv);
       if(sy<rb.y-7){rb.el.style.display='none'; restFree.push(rb.el); rest.splice(ri,1);}
+      else if(sy>rb.y+5&&G.a>0){rb.el.style.display='none'; restFree.push(rb.el); rest.splice(ri,1);}
       else if(sy>rb.y+5){var tr=(rb.el.getAttribute('transform')||'').match(/rotate\(([-\d.]+)\) scale\(([\d.]+)\)/);
         rise(t,rb.x,rb.y,rb.el.getAttribute('href'),tr?+tr[2]:.8,tr?+tr[1]:0); rb.el.style.display='none'; restFree.push(rb.el); rest.splice(ri,1);} }
     pool.forEach(function(b){
@@ -148,7 +180,7 @@
       }
       b.vy+=1500*dt; b.x+=b.vx*dt; b.y+=b.vy*dt; b.r+=b.spin*dt;
       var gx=b.y>172?clamp(b.x,212,398):b.x; if(gx!==b.x){b.x=gx; b.vx*=-.3;}
-      var sy=surfaceY(b.x,st.L);
+      var sy=surfaceY(b.x,st.Lv);
       if(b.y>=sy){
         b.y=sy;
         if(b.bounce<1&&b.vy>260){b.vy*=-.24; b.vx=b.vx*.5+(Math.random()-.5)*50; b.spin*=.35; b.bounce++;}
@@ -170,7 +202,7 @@
     if(reduce){pour.F=seated?1:0;pour.L=0;}
     else if(seated&&!draining&&pour.F<1){
       pour.L=Math.min(1,pour.L+dt/.6);
-      if(pour.L>=1) pour.F=Math.min(1,pour.F+dt/6.5);
+      if(pour.L>=1) pour.F=Math.min(1,pour.F+dt/4);
       pour.T=0;
     } else if(draining&&pour.F>0){ pour.L=1; }
     else if(pour.F<=0){ pour.L=Math.max(0,pour.L-dt/.3); }
@@ -212,10 +244,53 @@
       el.setAttribute('d','M'+x0+' '+y0+' C'+(x0+8*sw)+' '+(y0-28)+' '+(x0-10*sw)+' '+(y0-58)+' '+(x0+6*Math.sin(t*.9+i))+' '+(y0-92));
       el.setAttribute('opacity',(Math.sin(Math.PI*u)*.55*sOn).toFixed(3));
     });
+    grind(t,dt);
+    // gauges: needles glide with a little inertia and tremble while under pressure
+    var pT=(seated&&pour.L>0&&pour.F<1&&!draining)?1:(draining&&pour.F>0?.6:0);
+    gz.p+=(pT-gz.p)*Math.min(1,dt*(pT>gz.p?3.2:2.2)); gz.b+=((G.boil||0)-gz.b)*Math.min(1,dt*2.6);
+    var trP=reduce?0:gz.p*(Math.sin(t*27)*.9+Math.sin(t*41)*.5), trB=reduce?0:(G.jit?Math.sin(t*33)*.8:0);
+    needleB.setAttribute('transform','rotate('+(225+118*gz.b+trB).toFixed(2)+' 729.6 377)');
+    needleP.setAttribute('transform','rotate('+(225+152*gz.p+trP).toFixed(2)+' 778.5 541.2)');
     requestAnimationFrame(loop);
   }
+  // fresh grounds: a fluffy, clumpy column from the burr chute into the dosing cup (played backwards on the way up)
+  var GP=[], DP=[], GCOL=['#2b170b','#3a2212','#4a2c17','#24130a','#57351d'];
+  for(var gi=0;gi<170;gi++){var ce=document.createElementNS(NS,'circle'); ce.style.display='none'; groundsG.appendChild(ce); GP.push({el:ce,on:false});}
+  for(var di=0;di<26;di++){var de=document.createElementNS(NS,'circle'); de.style.display='none'; de.setAttribute('fill','#8d6c50'); dustG.appendChild(de); DP.push({el:de,on:false});}
+  function landY(x){return 592.5-15.5*G.a+Math.abs(x-340)*.42;}
+  function spawnG(rev){for(var i=0;i<GP.length;i++){var q=GP[i]; if(q.on) continue; q.on=true; q.rev=rev;
+      var clump=Math.random()<.1; q.r=clump?1+Math.random()*.55:.32+Math.random()*.5;
+      if(rev){q.x=340+(Math.random()-.5)*9; q.y=landY(q.x)-1; q.vy=-(55+Math.random()*40); q.vx=(340-q.x)*1.5;}
+      else {q.x=340+(Math.random()-.5)*5.5; q.y=571.5+Math.random()*1.5; q.vy=16+Math.random()*26; q.vx=(Math.random()-.5)*7;}
+      q.el.setAttribute('r',q.r.toFixed(2)); q.el.setAttribute('fill',GCOL[(Math.random()*GCOL.length)|0]); q.el.style.display=''; return;}}
+  function spawnD(){for(var i=0;i<DP.length;i++){var q=DP[i]; if(q.on) continue; q.on=true; q.t=0; q.life=.5+Math.random()*.5;
+      q.x=340+(Math.random()-.5)*10; q.y=574+Math.random()*10; q.vx=(Math.random()-.5)*14; q.vy=-3+Math.random()*8; q.r=.9+Math.random()*1.3;
+      q.el.setAttribute('r',q.r.toFixed(2)); q.el.style.display=''; return;}}
+  var gz={b:0,p:0}, needleB=$('needleB'), needleP=$('needleP');
+  function grind(t,dt){
+    var a=G.a; if(a>G.prevA+1e-5) G.fwdT=t; else if(a<G.prevA-1e-5) G.revT=t; G.prevA=a;
+    var fwd=t-G.fwdT<.22&&a<1&&G.g<.84, rev=t-G.revT<.22&&a>0;
+    G.jit=(fwd||rev)?1:0;
+    if(!reduce){
+      var n=Math.round((fwd||rev?520:0)*dt); for(var k=0;k<n;k++) spawnG(rev&&!fwd);
+      if(fwd&&Math.random()<dt*14) spawnD();
+    }
+    GP.forEach(function(q){ if(!q.on) return;
+      if(q.rev){q.vy+=140*dt; q.y+=q.vy*dt; q.x+=q.vx*dt; if(q.y<572||q.vy>0){q.on=false;q.el.style.display='none';return;}}
+      else {q.vy+=420*dt; q.x+=q.vx*dt; q.y+=q.vy*dt; if(q.y>=landY(q.x)){q.on=false;q.el.style.display='none';return;}}
+      q.el.setAttribute('cx',q.x.toFixed(2)); q.el.setAttribute('cy',q.y.toFixed(2));
+    });
+    DP.forEach(function(q){ if(!q.on) return; q.t+=dt; if(q.t>q.life){q.on=false;q.el.style.display='none';return;}
+      q.x+=q.vx*dt; q.y+=q.vy*dt; q.vx*=.97;
+      q.el.setAttribute('cx',q.x.toFixed(2)); q.el.setAttribute('cy',q.y.toFixed(2)); q.el.setAttribute('opacity',(.2*Math.sin(Math.PI*q.t/q.life)).toFixed(3));
+    });
+    if(G.g>0&&G.g<1&&pour.F<=0&&pour.L<=0){
+      scrState.textContent=a>=1?'Ground':(a>0?'Grinding':'Ready');
+      scrG.textContent=(18*a).toFixed(1).replace('.0','')+' g'; scrBar.setAttribute('width',(114*a).toFixed(1)); scrTime.textContent='0:00';
+    }
+  }
   // autoplay: glide from stage to stage with a short pause; the pour stage waits for the cup to fill
-  var STOPS=[0,.5,.8], MOVE=[0,5200,4400], PAUSE=3000;
+  var STOPS=[0,.40,.576,.848], MOVE=[0,3300,2500,3200], PAUSES=[0,1700,900,350];
   var auto={on:!reduce,timer:null,anim:null,idle:null};
   function storyY(p){var r=story.getBoundingClientRect();return scrollY+r.top+p*(story.offsetHeight-innerHeight);}
   function nextStop(){for(var i=0;i<STOPS.length;i++){if(STOPS[i]>targetP+.008)return i;}return -1;}
@@ -238,8 +313,8 @@
     if(!auto.on) return;
     var r=story.getBoundingClientRect(); if(r.bottom<innerHeight*.5) return;
     var i=nextStop(); if(i<0) return;
-    markNext(i,PAUSE);
-    auto.timer=setTimeout(function(){glide(i);},PAUSE);
+    markNext(i,PAUSES[i]);
+    auto.timer=setTimeout(function(){glide(i);},PAUSES[i]);
   }
   function userTook(){
     if(reduce) return;

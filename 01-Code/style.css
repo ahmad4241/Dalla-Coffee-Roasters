@@ -40,7 +40,7 @@ a{color:inherit}
 .nav .btn{min-height:44px;padding:0 20px}
 
 /* hero scroll story */
-.story{position:relative;height:460vh}
+.story{position:relative;height:560vh}
 .pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;align-items:center}
 .pin-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:center;gap:24px;width:min(1200px,100% - 40px);margin-inline:auto;padding-top:72px}
 .copy{position:relative;min-height:360px}
@@ -360,7 +360,7 @@ h1[tabindex="-1"]:focus{outline:none}
 .pin::after{content:"";position:absolute;left:0;right:0;bottom:0;height:10%;background:linear-gradient(transparent,#E8D3B8);pointer-events:none;z-index:2}
 .set{position:absolute;inset:-70% -80%;pointer-events:none}
 .set .wall{position:absolute;inset:0;background:#E8D3B8}
-.set .sun{position:absolute;inset:0;background:linear-gradient(118deg,transparent 0 30%,rgba(255,244,226,.55) 33% 38%,transparent 41% 44%,rgba(255,244,226,.45) 46% 49%,transparent 52%),linear-gradient(118deg,transparent 0 22%,rgba(255,240,220,.25) 24% 27%,transparent 30%);filter:blur(22px);mix-blend-mode:soft-light;opacity:.9}
+.set .sun{position:absolute;inset:0;background:linear-gradient(118deg,transparent 0 30%,rgba(255,244,226,.55) 33% 38%,transparent 41% 44%,rgba(255,244,226,.45) 46% 49%,transparent 52%),linear-gradient(118deg,transparent 0 22%,rgba(255,240,220,.25) 24% 27%,transparent 30%);filter:blur(22px);mix-blend-mode:soft-light;opacity:.5}
 .cast{position:absolute;left:52%;top:62%;width:58%;height:26%;background:radial-gradient(60% 60% at 30% 40%,rgba(70,40,18,.32),rgba(70,40,18,0) 70%);transform:skewX(-38deg);transform-origin:0 100%;filter:blur(14px);pointer-events:none}
 .contact{position:absolute;left:14%;top:84.5%;width:76%;height:6%;background:radial-gradient(50% 50% at 50% 50%,rgba(55,32,15,.42),rgba(55,32,15,0) 72%);filter:blur(6px);pointer-events:none}
 .key{position:absolute;left:52%;top:52%;width:28%;height:32%;background:radial-gradient(50% 50% at 50% 50%,rgba(255,214,160,.55),rgba(255,214,160,0) 70%);mix-blend-mode:screen;opacity:0;pointer-events:none;transition:opacity .4s}

@@ -67,6 +67,11 @@
             <p class="lede">Small batches every Tuesday, ground to order for your machine, your dallah or your V60.</p>
           </div>
           <div class="stage-copy" data-stage="2">
+            <p class="kicker">The grind</p>
+            <h2>Freshly ground.</h2>
+            <p class="lede">Eighteen grams, ground the moment you order, never before.</p>
+          </div>
+          <div class="stage-copy" data-stage="3">
             <p class="kicker">The pour</p>
             <h2>Then comes the crema.</h2>
             <p class="lede">A double shot of House Blend: 18 grams in, 36 out, about 27 seconds.</p>
@@ -101,6 +106,13 @@
                   <stop offset="0" stop-color="#241005"/><stop offset=".4" stop-color="#5e2f10"/><stop id="sgEnd" offset="1" stop-color="#9a5a24"/>
                 </linearGradient>
                 <radialGradient id="scrGlow" cx=".5" cy=".35" r=".8"><stop offset="0" stop-color="#3b5a78" stop-opacity=".35"/><stop offset="1" stop-color="#3b5a78" stop-opacity="0"/></radialGradient>
+                <clipPath id="doseTopC"><rect x="296" y="530" width="88" height="58.6"/><ellipse cx="340" cy="588.9" rx="24.6" ry="4.5"/></clipPath>
+                <radialGradient id="moundG"><stop offset="0" stop-color="#fff"/><stop offset=".62" stop-color="#fff"/><stop offset="1" stop-color="#000"/></radialGradient>
+                <mask id="moundM" maskUnits="userSpaceOnUse" x="280" y="520" width="120" height="100"><ellipse id="moundE" cx="340" cy="589.5" rx="0" ry="0" fill="url(#moundG)"/></mask>
+                <radialGradient id="doseShG"><stop offset="0" stop-color="#050302" stop-opacity=".75"/><stop offset="1" stop-color="#050302" stop-opacity="0"/></radialGradient>
+                <filter id="gBlur" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.1"/></filter>
+                <filter id="doseBlur" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur id="doseBlurF" stdDeviation="0"/></filter>
+                <filter id="dustB" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation=".7"/></filter>
                 <filter id="soft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5"/></filter>
               </defs>
               <!-- beans filling the hopper -->
@@ -144,6 +156,29 @@
                 <text x="339" y="481" font-size="8" fill="#c9d4df" text-anchor="middle">9 bar</text>
                 <text id="scrG" x="396" y="481" font-size="8" fill="#c9d4df" text-anchor="end">0 g</text>
               </g>
+            <!-- pressure gauges: boiler wakes with the grinder, brew pressure climbs to 9 bar during the shot -->
+              <g id="gauges">
+                <g filter="url(#gBlur)"><path d="M729.6 377.0 L713.1 393.8" stroke="rgb(191, 186, 175)" stroke-width="4.4" stroke-linecap="round"/><path d="M729.6 377.0 L740.5 368.2" stroke="rgb(198, 194, 179)" stroke-width="7.4" stroke-linecap="round"/><circle cx="729.6" cy="377.0" r="4.6" fill="rgb(198, 194, 179)"/></g>
+                <g id="needleB" transform="rotate(225 729.6 377.0)" style="filter:drop-shadow(.6px .9px .5px rgba(0,0,0,.35))">
+                  <path d="M728.45 382.50 L730.75 382.50 L729.92 356.00 L729.28 356.00 Z" fill="#17120e"/>
+                  <circle cx="729.6" cy="377.0" r="2.3" fill="#1f1914"/><circle cx="729.10" cy="376.50" r=".7" fill="#6d645a"/>
+                </g>
+                <g filter="url(#gBlur)"><path d="M778.5 541.2 L761.7 558.3" stroke="rgb(176, 168, 152)" stroke-width="4.4" stroke-linecap="round"/><path d="M778.5 541.2 L789.4 532.4" stroke="rgb(172, 162, 144)" stroke-width="7.4" stroke-linecap="round"/><circle cx="778.5" cy="541.2" r="4.6" fill="rgb(172, 162, 144)"/></g>
+                <g id="needleP" transform="rotate(225 778.5 541.2)" style="filter:drop-shadow(.6px .9px .5px rgba(0,0,0,.35))">
+                  <path d="M777.35 546.70 L779.65 546.70 L778.82 519.70 L778.18 519.70 Z" fill="#17120e"/>
+                  <circle cx="778.5" cy="541.2" r="2.3" fill="#1f1914"/><circle cx="778.00" cy="540.70" r=".7" fill="#6d645a"/>
+                </g>
+              </g>
+              <!-- grind stage: a dosing cup is set under the grinder, fills with fresh grounds and is carried away -->
+              <g id="dose" style="display:none">
+                <ellipse id="doseSh" cx="340" cy="646.5" rx="29" ry="3.2" fill="url(#doseShG)" opacity="0"/>
+                <g id="doseCup">
+                  <image href="images/dose-empty.webp" x="312.6" y="576" width="54.8" height="72"/>
+                  <image id="doseFull" href="images/dose-full.webp" x="312.6" y="576" width="54.8" height="72" mask="url(#moundM)" clip-path="url(#doseTopC)" style="display:none"/>
+                </g>
+                <g id="grounds" clip-path="url(#doseTopC)"></g>
+                <g id="dust" filter="url(#dustB)"></g>
+              </g>
             </svg>
             <div class="key" id="key" aria-hidden="true"></div>
             <div class="rain" id="rain" aria-hidden="true"></div>
@@ -159,7 +194,7 @@
       </div>
       <div class="vig" id="vig" aria-hidden="true"></div>
       <div class="fg a" aria-hidden="true"><img src="images/bean-4.webp" alt=""></div><div class="fg b" aria-hidden="true"><img src="images/bean-7.webp" alt=""></div><div class="fg c" aria-hidden="true"><img src="images/bean-4.webp" alt=""></div>
-      <div class="progress" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+      <div class="progress" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
       <div class="hint" id="hint">Scroll</div>
       <template id="beanSrc"><img src="images/bean-5.webp" alt=""><img src="images/bean-7.webp" alt=""><img src="images/bean-4.webp" alt=""></template>
     </div>
