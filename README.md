@@ -27,3 +27,4 @@ Open `01-Code/index.html` in a browser. Keep the `images` folder next to it.
 - **v14** full site around the hero
 - **v15** rebrand to Dalla Coffee Roasters: coffee shop, menu, Roast Club, English only, prices in IQD
 - **v16** one visual world (warm hero matching the product photos) and a more cinematic hero camera
+- **v17** phone fixes: no fade over the machine, bigger machine, closer pour shot
