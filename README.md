@@ -2,7 +2,9 @@
 
 Website for **Dalla Coffee Roasters**: a scroll-animated hero (beans fill the hopper, a double shot pours, the machine's screen times it, and it all rewinds when you scroll back up), plus a coffee shop, menu, Roast Club subscription, story and visit pages.
 
-Live preview (v15): https://claude.ai/artifact/CHDL5Ws7B6p8CpBwb2Y3tr
+**Live site:** https://dalla-coffee-roasters.netlify.app (hosted on Netlify from this repo)
+
+Preview on Claude (v15): https://claude.ai/artifact/CHDL5Ws7B6p8CpBwb2Y3tr
 
 ## Folders
 
