@@ -385,3 +385,21 @@ h1[tabindex="-1"]:focus{outline:none}
   .lede{margin:10px auto 16px;font-size:14.5px}
   .scene{width:min(100%,calc(100svh - 345px));min-width:280px}
 }
+
+/* ---------- v19: order on WhatsApp ---------- */
+.wa-form{display:grid;gap:10px}
+.wa-form .field{gap:4px}
+.wa-form .field label{font-size:12px}
+.wa-form .field input{min-height:42px;padding:9px 12px;border-radius:12px;background:var(--paper)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.seg button{min-height:40px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink-soft);font:600 12.5px/1 var(--sans);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--ground)}
+.btn-wa{background:#1F8A55;color:#fff;gap:10px;min-height:50px}
+.btn-wa:hover{background:#1A7849}
+.btn-wa svg{width:20px;height:20px}
+.btn-wa[aria-disabled="true"]{opacity:.45;pointer-events:none}
+.wa-hint{text-align:center}
+.line small.opt{display:block;color:var(--ink-soft);font-size:12px}
+.drawer{overflow-y:auto;-webkit-overflow-scrolling:touch}
+.drawer .lines{flex:none;overflow:visible}
+.drawer-foot{padding-bottom:8px}
