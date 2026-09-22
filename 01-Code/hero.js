@@ -11,6 +11,9 @@
   var ease=function(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2};
   var easeOut=function(t){return 1-Math.pow(1-t,3)};
   var $=function(id){return document.getElementById(id)};
+  var focus=0, fgEls=[].slice.call(document.querySelectorAll('.fg')), vig=$('vig'), keyEl=$('key');
+  var CAM_D=[[0,1,50,50,50,50],[.1,1.02,49,49,50,50],[.3,1.12,40,40,46,45],[.46,1.12,40,40,46,45],[.58,1.05,50,54,50,52],[.78,1.34,48,56,50,55],[1,1.34,48,56,50,55]];
+  var CAM_M=[[0,1,50,50,50,50],[.1,1.02,49,49,50,50],[.3,1.1,40,40,46,46],[.46,1.1,40,40,46,46],[.58,1.04,50,54,50,52],[.78,1.25,51,57,50,53],[1,1.25,51,57,50,53]];
   var fillPath=$('fillPath'), lid=$('lid'), glasses=$('glasses'), cup=$('cup'), cupShadow=$('cupShadow');
   var liqG=$('liqG'), levelR=$('levelR'), tint=$('tint'), streamA=$('streamA'), streamB=$('streamB'), dropA=$('dropA');
   var sgEnd=$('sgEnd'), scrState=$('scrState'), scrTime=$('scrTime'), scrBar=$('scrBar'), scrG=$('scrG'), rip=$('ripples');
@@ -56,13 +59,21 @@
     var g=ease(clamp((p-.52)/.1,0,1));
     
     glasses.setAttribute('opacity',(1-g).toFixed(3));
-    // camera: gentle push-in while filling, then a dolly down to the group head
-    var drift=ease(clamp(p/.45,0,1)), z=ease(clamp((p-.52)/.22,0,1)), mob=innerWidth<900;
-    var sc=1+.05*drift+(mob?.5:.22)*z;
-    var tx=(mob?-2:-8)*z, ty=(mob?-10:0)*z;
-    cam.style.transformOrigin=mob?'52% 60%':'58% 50%';
-    cam.style.transform='translate(calc(-50% + '+tx.toFixed(3)+'%),calc(-50% + '+ty.toFixed(3)+'%)) scale('+sc.toFixed(4)+')';
-    veil.style.opacity=(mob?clamp(z*1.6,0,1):0).toFixed(3);
+    // camera: keyframed moves (slight push to the hopper, pull back, closer framing of the pour)
+    var z=ease(clamp((p-.52)/.22,0,1)), mob=innerWidth<900;
+    var K=mob?CAM_M:CAM_D, i=0; while(i<K.length-2&&p>K[i+1][0]) i++;
+    var a0=K[i], a1=K[i+1], u=ease(clamp((p-a0[0])/(a1[0]-a0[0]),0,1)), L2=function(j){return a0[j]+(a1[j]-a0[j])*u};
+    var s=L2(1), fx=L2(2), fy=L2(3), gx=L2(4), gy=L2(5);
+    var ox=gx-(50+(fx-50)*s), oy=gy-(50+(fy-50)*s);
+    var ze=1+(mob?.08:.1)*focus*clamp((p-.7)/.08,0,1);
+    if(ze>1.0001){var Ax=50+ox+(65-50)*s, Ay=50+oy+(14-50)*s; ox=Ax*(1-ze)+ze*(50+ox)-50; oy=Ay*(1-ze)+ze*(50+oy)-50; s=s*ze;}
+    cam.style.transformOrigin='50% 50%';
+    cam.style.transform='translate(calc(-50% + '+ox.toFixed(3)+'%),calc(-50% + '+oy.toFixed(3)+'%)) scale('+s.toFixed(4)+')';
+    var cw=cam.offsetWidth/100, fgIn=clamp((p-.04)/.1,0,1)*(reduce?0:1);
+    fgEls.forEach(function(el,j){var k=[2.1,1.6,2.4][j]; el.style.opacity=(.92*fgIn).toFixed(3);
+      el.style.transform='translate3d('+(ox*cw*k*.55).toFixed(1)+'px,'+(oy*cw*k*.55).toFixed(1)+'px,0) scale('+(1+(s-1)*1.6).toFixed(3)+') rotate('+(p*40*(j%2?-1:1)).toFixed(1)+'deg)';});
+    vig.style.opacity=(.35+.55*clamp((p-.5)/.25,0,1)).toFixed(3);
+    veil.style.opacity=0;
     // espresso cup rises into place
     var c=clamp((p-.63)/.09,0,1), ce=easeOut(c); st.cupIn=c;
     cup.setAttribute('transform','translate(0,'+(-60*(1-ce)).toFixed(1)+')');
@@ -140,6 +151,8 @@
     if(pour.F>=1&&!reduce){ if(pour.fullAt<0) pour.fullAt=t; pour.T=Math.min(1,pour.T+dt/.5); }
     var f=pour.F<.5?2*pour.F*pour.F:1-Math.pow(-2*pour.F+2,2)/2;
     var sinceFull=pour.fullAt<0?-1:t-pour.fullAt;
+    keyEl.style.opacity=(seated?(.25+.75*f):0).toFixed(3);
+    var ft=(!reduce&&seated&&(pour.L>0||pour.F>0)&&(sinceFull<0||sinceFull<1.6)&&!draining)?1:0; var nf=focus+(ft-focus)*Math.min(1,dt*(ft?0.9:0.7)); if(Math.abs(nf-focus)>.0004){focus=nf; apply(P);}
     // the espresso rises inside the photographed cup
     var lvl=672-f*32;
     levelR.setAttribute('y',lvl.toFixed(2)); levelR.setAttribute('height',(672-lvl).toFixed(2));
@@ -214,7 +227,7 @@
     ticking=false;
     var r=story.getBoundingClientRect(), total=story.offsetHeight-innerHeight;
     targetP=clamp(-r.top/total,0,1);
-    nav.classList.toggle('solid', scrollY>20);
+    nav.classList.toggle('solid', scrollY>20); nav.classList.toggle('over-hero', r.bottom>80 && document.querySelector('main[data-page="home"]') && !document.querySelector('main[data-page="home"]').hidden);
     hint.style.opacity=targetP>0.03?0:1;
   }
   function placeVeil(){
