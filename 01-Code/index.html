@@ -78,7 +78,7 @@
                 <radialGradient id="shadowG" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#140c07" stop-opacity=".5"/><stop offset="1" stop-color="#140c07" stop-opacity="0"/></radialGradient>
                 <clipPath id="mouthC"><ellipse cx="627" cy="670.4" rx="47.4" ry="27.9"/></clipPath>
                 <clipPath id="fallC"><rect x="0" y="-200" width="1024" height="374"/><path d="M200 172 L410 172 L410 214 L403 244 L390 268 L374 290 L358 299 L252 299 L234 289 L217 267 L205 242 L200 212 Z"/></clipPath>
-                <filter id="mblur" x="-50%" y="-50%" width="200%" height="200%"><feColorMatrix type="matrix" values=".62 0 0 0 0  0 .6 0 0 0  0 0 .6 0 0  0 0 0 1 0"/><feGaussianBlur stdDeviation="0.35 2.2"/></filter>
+                <filter id="mblur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="0.35 2.2"/></filter>
                 <image id="beanA" href="images/bean-4.webp" width="24" height="24" x="-12" y="-12"/>
                 <image id="beanB" href="images/bean-7.webp" width="21" height="24" x="-10.5" y="-12"/>
                 <clipPath id="levelC"><rect id="levelR" x="580" y="672" width="160" height="0"/></clipPath>
@@ -92,7 +92,8 @@
               <g clip-path="url(#glass)"><g clip-path="url(#fillc)">
                 <image href="images/hopper-beans.webp" x="195" y="170" width="220" height="133" preserveAspectRatio="none" opacity=".97"/>
               </g></g>
-              <g id="falling" clip-path="url(#fallC)" filter="url(#mblur)"></g>
+              <g clip-path="url(#glass)"><g id="resting" style="filter:drop-shadow(0 1.4px 1.1px rgba(22,11,5,.6))"></g></g>
+              <g id="falling" clip-path="url(#fallC)"></g>
               <rect x="200" y="172" width="210" height="128" fill="url(#glassHi)" clip-path="url(#glass)"/>
               <!-- lid -->
               <image id="lid" href="images/hopper-lid.webp" x="186" y="136" width="242" height="42"/>
