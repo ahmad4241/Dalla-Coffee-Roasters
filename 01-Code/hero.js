@@ -19,22 +19,36 @@
   var sgEnd=$('sgEnd'), scrState=$('scrState'), scrTime=$('scrTime'), scrBar=$('scrBar'), scrG=$('scrG'), rip=$('ripples');
   var steamEls=[].slice.call(document.querySelectorAll('#steam path'));
   var ripEls=[]; for(var r=0;r<3;r++){var el=document.createElementNS('http://www.w3.org/2000/svg','ellipse'); rip.appendChild(el); ripEls.push(el);}
-  // real-feeling beans: poured in clumps just above the hopper, falling under gravity, into the glass
-  var NS='http://www.w3.org/2000/svg', falling=$('falling'), pool=[], nextClump=0;
-  for(var i=0;i<42;i++){
+  // a real pour: beans stream in from above the frame, bounce once on the pile and stay there;
+  // the pile rises underneath them and slowly covers the older ones. Scrolling back up plays it in reverse.
+  var NS='http://www.w3.org/2000/svg', falling=$('falling'), restG=$('resting'), pool=[], rest=[], restFree=[], nextClump=0;
+  for(var i=0;i<60;i++){
     var u=document.createElementNS(NS,'use'); u.setAttribute('href',i%3?'#beanA':'#beanB'); u.style.display='none'; falling.appendChild(u);
     pool.push({el:u,on:false});
   }
-  function spawnClump(t,rev,lvlY){
-    var n=5+Math.floor(Math.random()*4), cx=292+Math.random()*28, vx0=(Math.random()-.5)*30;
+  function surfaceY(x,L){var lvl=298-L*118, cxn=clamp((x-305)/115,-1,1); return lvl+7-(1-cxn*cxn)*(7+6*L)-4;}
+  function spawnPour(t,n){
     for(var i=0,k=0;i<pool.length&&k<n;i++){
       var b=pool[i]; if(b.on) continue; k++;
-      b.on=true; b.rev=!!rev; b.t0=t+Math.random()*.06; b.x0=cx+(Math.random()-.5)*26; b.y0=70+(Math.random()-.5)*22;
-      b.vx=vx0+(Math.random()-.5)*46; b.vy=30+Math.random()*50; b.r0=Math.random()*360; b.spin=(Math.random()<.5?-1:1)*(240+Math.random()*420); b.s=.82+Math.random()*.3;
-      if(rev){ // the same fall, played backwards: leave the pile fast, slow down, vanish above the hopper
-        b.ys=lvlY+2; b.xs=b.x0+(Math.random()-.5)*60; b.up=Math.sqrt(2*1500*Math.max(40,b.ys-b.y0)); b.dur=b.up/1500;
-      }
+      b.on=true; b.rev=false; b.x=288+Math.random()*34; b.y=-70-Math.random()*50; b.vx=(Math.random()-.5)*60; b.vy=60+Math.random()*80;
+      b.r=Math.random()*360; b.spin=(Math.random()<.5?-1:1)*(260+Math.random()*420); b.s=.72+Math.random()*.22; b.bounce=0; b.t0=t;
     }
+  }
+  function rise(t,x,y,href,s,r){ // the fall played backwards: leaves the pile fast, slows as it climbs, exits above the frame
+    for(var i=0;i<pool.length;i++){var b=pool[i]; if(b.on) continue;
+      b.on=true; b.rev=true; b.t0=t; b.xs=x; b.ys=y; b.x1=288+Math.random()*34; b.yTop=-80-Math.random()*50;
+      b.up=Math.sqrt(2*1500*(b.ys-b.yTop)); b.dur=b.up/1500;
+      b.r0=r; b.spin=(Math.random()<.5?-1:1)*(260+Math.random()*420); b.s=s;
+      if(href) b.el.setAttribute('href',href); return true;}
+    return false;
+  }
+  function settle(b){
+    var el=restFree.pop();
+    if(!el){el=document.createElementNS(NS,'use'); restG.appendChild(el);}
+    el.setAttribute('href',b.el.getAttribute('href')); el.style.display='';
+    el.setAttribute('transform','translate('+b.x.toFixed(1)+' '+b.y.toFixed(1)+') rotate('+b.r.toFixed(1)+') scale('+b.s.toFixed(2)+')');
+    rest.push({el:el,x:b.x,y:b.y});
+    if(rest.length>90){var o=rest.shift(); o.el.style.display='none'; restFree.push(o.el);}
   }
   var st={p:0,L:0,cupIn:0,rainOn:0,prevL:0,fillT:-9,emptyT:-9};
   var pour={F:0,L:0,T:0,drainT:-9,fullAt:-1,Pprev:0};
@@ -114,23 +128,35 @@
     if(st.L>st.prevL+1e-5) st.fillT=t; else if(st.L<st.prevL-1e-5) st.emptyT=t;
     st.prevL=st.L;
     var filling=t-st.fillT<.35&&st.L<1, emptying=t-st.emptyT<.35&&st.L>0;
-    if(!reduce&&t>=nextClump&&(filling||emptying)){spawnClump(t,emptying,lvlY); nextClump=t+.24+Math.random()*.14;}
+    if(!reduce&&t>=nextClump){
+      if(filling){spawnPour(t,1+Math.floor(Math.random()*3)); nextClump=t+.06+Math.random()*.06;}
+      else if(emptying){var nn=2+Math.floor(Math.random()*3); for(var q=0;q<nn;q++){var rx=292+Math.random()*28; rise(t,rx,surfaceY(rx,st.L)+2,null,.72+Math.random()*.22,Math.random()*360);} nextClump=t+.06+Math.random()*.06;}
+    }
+    // resting beans: covered as the pile rises, lifted back out when it drops
+    for(var ri=rest.length-1;ri>=0;ri--){var rb=rest[ri], sy=surfaceY(rb.x,st.L);
+      if(sy<rb.y-7){rb.el.style.display='none'; restFree.push(rb.el); rest.splice(ri,1);}
+      else if(sy>rb.y+5){var tr=(rb.el.getAttribute('transform')||'').match(/rotate\(([-\d.]+)\) scale\(([\d.]+)\)/);
+        rise(t,rb.x,rb.y,rb.el.getAttribute('href'),tr?+tr[2]:.8,tr?+tr[1]:0); rb.el.style.display='none'; restFree.push(rb.el); rest.splice(ri,1);} }
     pool.forEach(function(b){
       if(!b.on) return;
-      var tt=t-b.t0; if(tt<0){b.el.style.display='none';return;}
-      var x,y;
       if(b.rev){
-        if(tt>b.dur){b.on=false;b.el.style.display='none';return;}
-        x=b.xs+(b.x0-b.xs)*(tt/b.dur); y=b.ys-b.up*tt+.5*1500*tt*tt;
-        b.el.style.opacity=clamp((b.dur-tt)/.12,0,1);
-      } else {
-        x=b.x0+b.vx*tt; y=b.y0+b.vy*tt+.5*1500*tt*tt;
-        var land=lvlY+4+Math.abs(x-305)*.05;
-        if(y>land||tt>2){b.on=false;b.el.style.display='none';return;}
-        b.el.style.opacity=1;
+        var tt=t-b.t0; if(tt>b.dur){b.on=false;b.el.style.display='none';return;}
+        var k=tt/b.dur, x=b.xs+(b.x1-b.xs)*(1-Math.pow(1-k,2)), y=b.ys-b.up*tt+.5*1500*tt*tt;
+        b.el.style.opacity=1; b.el.style.display='';
+        b.el.setAttribute('transform','translate('+x.toFixed(1)+' '+y.toFixed(1)+') rotate('+(b.r0+b.spin*tt).toFixed(1)+') scale('+b.s.toFixed(2)+')');
+        return;
       }
-      b.el.style.display='';
-      b.el.setAttribute('transform','translate('+x.toFixed(1)+' '+y.toFixed(1)+') rotate('+(b.r0+b.spin*tt).toFixed(1)+') scale('+b.s.toFixed(2)+')');
+      b.vy+=1500*dt; b.x+=b.vx*dt; b.y+=b.vy*dt; b.r+=b.spin*dt;
+      var gx=b.y>172?clamp(b.x,212,398):b.x; if(gx!==b.x){b.x=gx; b.vx*=-.3;}
+      var sy=surfaceY(b.x,st.L);
+      if(b.y>=sy){
+        b.y=sy;
+        if(b.bounce<1&&b.vy>260){b.vy*=-.24; b.vx=b.vx*.5+(Math.random()-.5)*50; b.spin*=.35; b.bounce++;}
+        else {settle(b); b.on=false; b.el.style.display='none'; return;}
+      }
+      if(t-b.t0>3){b.on=false;b.el.style.display='none';return;}
+      b.el.style.opacity=1; b.el.style.display='';
+      b.el.setAttribute('transform','translate('+b.x.toFixed(1)+' '+b.y.toFixed(1)+') rotate('+b.r.toFixed(1)+') scale('+b.s.toFixed(2)+')');
     });
     // pour: fills on its own clock going forward; scrolling back up drains it back into the spout
     var goingUp=P<pour.Pprev-.00004; pour.Pprev=P;
