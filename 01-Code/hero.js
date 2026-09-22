@@ -13,7 +13,7 @@
   var $=function(id){return document.getElementById(id)};
   var focus=0, fgEls=[].slice.call(document.querySelectorAll('.fg')), vig=$('vig'), keyEl=$('key');
   var CAM_D=[[0,1,50,50,50,50],[.1,1.02,49,49,50,50],[.3,1.12,40,40,46,45],[.46,1.12,40,40,46,45],[.58,1.05,50,54,50,52],[.78,1.34,48,56,50,55],[1,1.34,48,56,50,55]];
-  var CAM_M=[[0,1,50,50,50,50],[.1,1.02,49,49,50,50],[.3,1.1,40,40,46,46],[.46,1.1,40,40,46,46],[.58,1.04,50,54,50,52],[.78,1.25,51,57,50,53],[1,1.25,51,57,50,53]];
+  var CAM_M=[[0,1,50,50,50,50],[.1,1.02,49,49,50,50],[.3,1.08,47,44,49,46],[.46,1.08,47,44,49,46],[.58,1.05,50,54,50,52],[.78,1.3,51,57,50,55],[1,1.3,51,57,50,55]];
   var fillPath=$('fillPath'), lid=$('lid'), glasses=$('glasses'), cup=$('cup'), cupShadow=$('cupShadow');
   var liqG=$('liqG'), levelR=$('levelR'), tint=$('tint'), streamA=$('streamA'), streamB=$('streamB'), dropA=$('dropA');
   var sgEnd=$('sgEnd'), scrState=$('scrState'), scrTime=$('scrTime'), scrBar=$('scrBar'), scrG=$('scrG'), rip=$('ripples');
