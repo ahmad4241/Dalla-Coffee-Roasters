@@ -40,7 +40,7 @@ a{color:inherit}
 .nav .btn{min-height:44px;padding:0 20px}
 
 /* hero scroll story */
-.story{position:relative;height:560vh}
+.story{position:relative;height:400vh}
 .pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;align-items:center}
 .pin-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:center;gap:24px;width:min(1200px,100% - 40px);margin-inline:auto;padding-top:72px}
 .copy{position:relative;min-height:360px}
@@ -59,7 +59,7 @@ h1{font-size:clamp(52px,7.4vw,104px);line-height:.92}
 .copy{z-index:2}
 .scene{z-index:0}
 @media (max-width:900px){.veil{background:linear-gradient(to bottom,var(--ground) 0,var(--ground) var(--vy,40%),transparent calc(var(--vy,40%) + 80px))}}
-.cam{position:absolute;left:50%;top:50%;width:122%;aspect-ratio:1;transform:translate(-50%,-50%);transform-origin:61.2% 66%}
+.cam{position:absolute;left:50%;top:50%;width:114.5%;aspect-ratio:1;transform:translate(-50%,-50%);transform-origin:61.2% 66%}
 @media (min-width:901px){.scene{width:min(100%,calc(100svh*.67));max-height:none}.cam{transform-origin:58.0% 50.0%}h1{font-size:clamp(44px,5.8vw,84px)}.stage-copy h2{font-size:clamp(38px,4.6vw,66px)}}
 .rain{position:absolute;inset:0;pointer-events:none}
 .rain img{position:absolute;left:0;top:0;width:3.2%;opacity:0;will-change:transform,opacity;filter:drop-shadow(0 4px 4px rgba(42,29,22,.25))}
@@ -403,3 +403,13 @@ h1[tabindex="-1"]:focus{outline:none}
 .drawer{overflow-y:auto;-webkit-overflow-scrolling:touch}
 .drawer .lines{flex:none;overflow:visible}
 .drawer-foot{padding-bottom:8px}
+
+/* backdrop disc behind the machine, and a few loose beans (moves with the camera) */
+.disc{position:absolute;left:61%;top:46%;width:73%;aspect-ratio:1;border-radius:50%;background:#DDC4A3;transform:translate(-50%,-50%);pointer-events:none}
+.gb,.fb{position:absolute;left:var(--x);top:var(--y);width:var(--w);transform:translate(-50%,-50%) rotate(var(--r));pointer-events:none}
+.gb img,.fb img{width:100%;display:block}
+.gb{filter:drop-shadow(0 3px 2px rgba(42,29,22,.35))}
+.fb{filter:drop-shadow(0 10px 8px rgba(42,29,22,.22))}
+.fb img{animation:bob var(--t,7s) ease-in-out infinite alternate}
+.fb.soft{filter:blur(1.6px) drop-shadow(0 10px 8px rgba(42,29,22,.18))}
+@media (prefers-reduced-motion:reduce){.fb img{animation:none}}

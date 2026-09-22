@@ -12,7 +12,7 @@
   var easeOut=function(t){return 1-Math.pow(1-t,3)};
   var $=function(id){return document.getElementById(id)};
   var focus=0, fgEls=[].slice.call(document.querySelectorAll('.fg')), vig=$('vig'), keyEl=$('key');
-  var CAM_D=[[0,1,50,50,50,50],[.1,1.02,49,49,50,50],[.3,1.12,40,40,46,45],[.46,1.12,40,40,46,45],[.58,1.05,50,54,50,52],[.78,1.34,48,56,50,55],[1,1.34,48,56,50,55]];
+  var CAM_D=[[0,1,50,50,50,50],[.1,1.02,49,49,50,50],[.3,1.08,40,40,46,45],[.46,1.08,40,40,46,45],[.58,1.05,50,54,50,52],[.78,1.3,48,56,50,55],[1,1.3,48,56,50,55]];
   var CAM_M=[[0,1,50,50,50,50],[.1,1.02,49,49,50,50],[.3,1.08,47,44,49,46],[.46,1.08,47,44,49,46],[.58,1.05,50,54,50,52],[.78,1.3,51,57,50,55],[1,1.3,51,57,50,55]];
   var fillPath=$('fillPath'), lid=$('lid'), glasses=$('glasses'), cup=$('cup'), cupShadow=$('cupShadow');
   var liqG=$('liqG'), levelR=$('levelR'), tint=$('tint'), streamA=$('streamA'), streamB=$('streamB'), dropA=$('dropA');
@@ -30,14 +30,14 @@
   function spawnPour(t,n){
     for(var i=0,k=0;i<pool.length&&k<n;i++){
       var b=pool[i]; if(b.on) continue; k++;
-      b.on=true; b.rev=false; b.x=288+Math.random()*34; b.y=-70-Math.random()*50; b.vx=(Math.random()-.5)*60; b.vy=60+Math.random()*80;
+      b.on=true; b.rev=false; b.x=288+Math.random()*34; b.y=-70-Math.random()*50; b.vx=(Math.random()-.5)*60; b.vy=150+Math.random()*90;
       b.r=Math.random()*360; b.spin=(Math.random()<.5?-1:1)*(260+Math.random()*420); b.s=.72+Math.random()*.22; b.bounce=0; b.t0=t;
     }
   }
   function rise(t,x,y,href,s,r){ // the fall played backwards: leaves the pile fast, slows as it climbs, exits above the frame
     for(var i=0;i<pool.length;i++){var b=pool[i]; if(b.on) continue;
       b.on=true; b.rev=true; b.t0=t; b.xs=x; b.ys=y; b.x1=288+Math.random()*34; b.yTop=-80-Math.random()*50;
-      b.up=Math.sqrt(2*1500*(b.ys-b.yTop)); b.dur=b.up/1500;
+      b.up=Math.sqrt(2*2200*(b.ys-b.yTop)); b.dur=b.up/2200;
       b.r0=r; b.spin=(Math.random()<.5?-1:1)*(260+Math.random()*420); b.s=s;
       if(href) b.el.setAttribute('href',href); return true;}
     return false;
@@ -51,20 +51,21 @@
     if(rest.length>90){var o=rest.shift(); o.el.style.display='none'; restFree.push(o.el);}
   }
   var st={p:0,L:0,cupIn:0,rainOn:0,prevL:0,fillT:-9,emptyT:-9};
-  var pour={F:0,L:0,T:0,drainT:-9,fullAt:-1,Pprev:0};
+  var pour={F:0,L:0,T:0,drainT:-9,fullAt:-1,Pprev:0}, pourDraw=0;
   var targetP=0,P=0,first=true,lastT=null,cur=-1,movedAt=0;
   var BUMPS=[5,8,4,7,9,5,8,6,4,9,7,5,8,6,9,4,7,8,5,6,9,7,5];
   var SX=631, SY0=611;
   // four stages on one scroll: beans in (0-.40), grind (.40-.62), pour (.62-1). The original timeline runs on p.
   var G={g:0,a:0,w:0,stg:0,prevA:0,fwdT:-9,revT:-9,jit:0};
-  var GCAM_D=[1.95,33.2,57.8,47,50], GCAM_M=[1.5,33.3,57.8,46,67];
+  var GCAM_D=[1.4,53.5,52.7,58,50], GCAM_M=[1.5,33.3,57.8,46,67];
   var doseBlurF=$('doseBlurF'), doseEl=$('dose'), doseCup=$('doseCup'), doseSh=$('doseSh'), doseFull=$('doseFull'), moundE=$('moundE'), groundsG=$('grounds'), dustG=$('dust');
   function apply(P0){
     var p, g;
-    if(P0<=.40){p=P0*1.25; g=0;} else if(P0<.62){p=.5; g=(P0-.40)/.22;} else {p=.5+(P0-.62)/.38*.5; g=1;}
+    // the grind stage is gone: beans in, then straight to the pour
+    if(P0<=.45){p=P0*(0.5/.45); g=0;} else {p=.5+(P0-.45)/.55*.5; g=0;}
     G.g=g; G.a=clamp((g-.24)/.5,0,1);
     G.w=ease(clamp(g/.14,0,1))*(1-ease(clamp((g-.8)/.2,0,1)));
-    G.stg=P0<.06?0:P0<.41?1:P0<.63?2:3;
+    G.stg=P0<.06?0:P0<.46?1:2;
     G.boil=ease(clamp((P0-.425)/.07,0,1));
     applyBase(p); applyGrind();
   }
@@ -88,7 +89,8 @@
     // hopper: lid lifts, beans pour in, lid closes
     var lidOpen=ease(clamp((p-.05)/.07,0,1))*(1-ease(clamp((p-.43)/.06,0,1)));
     lid.setAttribute('transform','translate(0,'+(-240*lidOpen).toFixed(1)+')'); lid.setAttribute('opacity',(1-clamp((lidOpen-.35)/.5,0,1)).toFixed(3));
-    var L=clamp((p-.12)/.3,0,1); st.L=L; st.Lv=L*(1-.26*G.a);
+    // the hopper gives up about 30% of its beans while the cup fills
+    var L=clamp((p-.12)/.3,0,1); st.L=L; st.Lv=L*(1-.26*G.a)*(1-.30*pourDraw);
     
     var Lv=st.Lv, lvl=298-Lv*118, a=lvl+7, b=lvl-7-6*Lv;
     var dP='M190 320 L190 '+(lvl+7).toFixed(1);
@@ -110,7 +112,7 @@
     if(G.w>0){var GC=mob?GCAM_M:GCAM_D, w=G.w; s+=(GC[0]-s)*w; fx+=(GC[1]-fx)*w; fy+=(GC[2]-fy)*w; gx+=(GC[3]-gx)*w; gy+=(GC[4]-gy)*w;}
     if(G.jit>0&&!reduce){gx+=(Math.random()-.5)*.09*G.jit; gy+=(Math.random()-.5)*.09*G.jit;}
     var ox=gx-(50+(fx-50)*s), oy=gy-(50+(fy-50)*s);
-    var ze=1+(mob?.08:.1)*focus*clamp((p-.7)/.08,0,1);
+    var ze=1+.08*focus*clamp((p-.7)/.08,0,1);
     if(ze>1.0001){var Ax=50+ox+(65-50)*s, Ay=50+oy+(14-50)*s; ox=Ax*(1-ze)+ze*(50+ox)-50; oy=Ay*(1-ze)+ze*(50+oy)-50; s=s*ze;}
     cam.style.transformOrigin='50% 50%';
     cam.style.transform='translate(calc(-50% + '+ox.toFixed(3)+'%),calc(-50% + '+oy.toFixed(3)+'%)) scale('+s.toFixed(4)+')';
@@ -173,17 +175,17 @@
       if(!b.on) return;
       if(b.rev){
         var tt=t-b.t0; if(tt>b.dur){b.on=false;b.el.style.display='none';return;}
-        var k=tt/b.dur, x=b.xs+(b.x1-b.xs)*(1-Math.pow(1-k,2)), y=b.ys-b.up*tt+.5*1500*tt*tt;
+        var k=tt/b.dur, x=b.xs+(b.x1-b.xs)*(1-Math.pow(1-k,2)), y=b.ys-b.up*tt+.5*2200*tt*tt;
         b.el.style.opacity=1; b.el.style.display='';
         b.el.setAttribute('transform','translate('+x.toFixed(1)+' '+y.toFixed(1)+') rotate('+(b.r0+b.spin*tt).toFixed(1)+') scale('+b.s.toFixed(2)+')');
         return;
       }
-      b.vy+=1500*dt; b.x+=b.vx*dt; b.y+=b.vy*dt; b.r+=b.spin*dt;
+      b.vy+=2200*dt; b.x+=b.vx*dt; b.y+=b.vy*dt; b.r+=b.spin*dt;
       var gx=b.y>172?clamp(b.x,212,398):b.x; if(gx!==b.x){b.x=gx; b.vx*=-.3;}
       var sy=surfaceY(b.x,st.Lv);
       if(b.y>=sy){
         b.y=sy;
-        if(b.bounce<1&&b.vy>260){b.vy*=-.24; b.vx=b.vx*.5+(Math.random()-.5)*50; b.spin*=.35; b.bounce++;}
+        if(b.bounce<1&&b.vy>330){b.vy*=-.24; b.vx=b.vx*.5+(Math.random()-.5)*50; b.spin*=.35; b.bounce++;}
         else {settle(b); b.on=false; b.el.style.display='none'; return;}
       }
       if(t-b.t0>3){b.on=false;b.el.style.display='none';return;}
@@ -201,12 +203,13 @@
     var draining=t-pour.drainT<.25;
     if(reduce){pour.F=seated?1:0;pour.L=0;}
     else if(seated&&!draining&&pour.F<1){
-      pour.L=Math.min(1,pour.L+dt/.6);
-      if(pour.L>=1) pour.F=Math.min(1,pour.F+dt/4);
+      pour.L=Math.min(1,pour.L+dt/.3);
+      if(pour.L>=1) pour.F=Math.min(1,pour.F+dt/1.8);
       pour.T=0;
     } else if(draining&&pour.F>0){ pour.L=1; }
     else if(pour.F<=0){ pour.L=Math.max(0,pour.L-dt/.3); }
-    if(pour.F>=1&&!reduce){ if(pour.fullAt<0) pour.fullAt=t; pour.T=Math.min(1,pour.T+dt/.5); }
+    if(pour.F>=1&&!reduce){ if(pour.fullAt<0) pour.fullAt=t; pour.T=Math.min(1,pour.T+dt/.35); }
+    if(Math.abs(pour.F-pourDraw)>.01){pourDraw=pour.F; apply(P);}
     var f=pour.F<.5?2*pour.F*pour.F:1-Math.pow(-2*pour.F+2,2)/2;
     var sinceFull=pour.fullAt<0?-1:t-pour.fullAt;
     keyEl.style.opacity=(seated?(.25+.75*f):0).toFixed(3);
@@ -290,8 +293,9 @@
     }
   }
   // autoplay: glide from stage to stage with a short pause; the pour stage waits for the cup to fill
-  var STOPS=[0,.40,.576,.848], MOVE=[0,3300,2500,3200], PAUSES=[0,1700,900,350];
-  var auto={on:!reduce,timer:null,anim:null,idle:null};
+  var STOPS=[0,.45,.86], MOVE=[0,3300,3000], PAUSES=[0,1700,600];
+  var auto={on:false,armed:false,touched:false,timer:null,anim:null,idle:null};
+  function resume(){auto.on=true; queue();}
   function storyY(p){var r=story.getBoundingClientRect();return scrollY+r.top+p*(story.offsetHeight-innerHeight);}
   function nextStop(){for(var i=0;i<STOPS.length;i++){if(STOPS[i]>targetP+.008)return i;}return -1;}
   function markNext(i,ms){dots.forEach(function(d,j){d.classList.remove('next');d.style.removeProperty('--wait');});
@@ -318,9 +322,10 @@
   }
   function userTook(){
     if(reduce) return;
+    auto.touched=true;
     auto.on=false; clearTimeout(auto.timer); cancelAnimationFrame(auto.anim); auto.anim=null; markNext(-1);
     clearTimeout(auto.idle);
-    auto.idle=setTimeout(function(){auto.on=true; queue();},4000);
+    if(auto.armed) auto.idle=setTimeout(resume,4000);
   }
   ['wheel','touchstart','pointerdown','keydown'].forEach(function(ev){addEventListener(ev,userTook,{passive:true});});
   var ticking=false;
@@ -328,6 +333,8 @@
     ticking=false;
     var r=story.getBoundingClientRect(), total=story.offsetHeight-innerHeight;
     targetP=clamp(-r.top/total,0,1);
+    // autoplay waits for the visitor: it only starts once they have scrolled into the story themselves
+    if(!reduce&&!auto.armed&&auto.touched&&targetP>.004){auto.armed=true; clearTimeout(auto.idle); auto.idle=setTimeout(resume,900);}
     nav.classList.toggle('solid', scrollY>20); nav.classList.toggle('over-hero', r.bottom>80 && document.querySelector('main[data-page="home"]') && !document.querySelector('main[data-page="home"]').hidden);
     hint.style.opacity=targetP>0.03?0:1;
   }
@@ -339,7 +346,6 @@
   function req(){ if(!ticking){ticking=true;requestAnimationFrame(frame);} }
   addEventListener('scroll',req,{passive:true}); addEventListener('resize',function(){first=true;placeVeil();req();}); placeVeil();
   frame(); P=targetP; apply(P); requestAnimationFrame(loop);
-  if(auto.on) setTimeout(queue,200);
 
   // anatomy
   var items=[].slice.call(document.querySelectorAll('.parts li')), pts=[].slice.call(document.querySelectorAll('.pt'));
