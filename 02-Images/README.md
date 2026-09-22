@@ -1,1 +1,4 @@
-Original Gemini images, full size (from `source-images` in Dalla-Coffee-Roasters-v15.zip).
+Original Gemini images, full size.
+
+- `drinks-and-bags/` six drinks, three bags and the empty scene
+- `machine/` the four machine photos the hero animation is cut from
