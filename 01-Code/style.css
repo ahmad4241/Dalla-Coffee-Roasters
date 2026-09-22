@@ -372,3 +372,16 @@ h1[tabindex="-1"]:focus{outline:none}
 .fg.c{width:10vmin;right:-3vmin;bottom:-3vh}
 @media (max-width:900px){.fg.b{display:none}}
 @media (prefers-reduced-motion:reduce){.fg{display:none}}
+
+/* ---------- v17: phone fixes (no fade over the machine, bigger machine) ---------- */
+@media (max-width:900px){
+  .pin::after{display:none}
+  .fg{display:none}
+  .vig{background:radial-gradient(150% 120% at 50% 40%,transparent 62%,rgba(62,36,16,.16) 100%)}
+  .pin-grid{padding-top:80px}
+  .copy{min-height:250px}
+  h1{font-size:clamp(34px,9.6vw,50px)}
+  .stage-copy h2{font-size:clamp(32px,9vw,46px)}
+  .lede{margin:10px auto 16px;font-size:14.5px}
+  .scene{width:min(100%,calc(100svh - 345px));min-width:280px}
+}
