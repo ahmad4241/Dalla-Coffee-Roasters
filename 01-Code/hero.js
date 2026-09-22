@@ -57,31 +57,30 @@
   var SX=631, SY0=611;
   // four stages on one scroll: beans in (0-.40), grind (.40-.62), pour (.62-1). The original timeline runs on p.
   var G={g:0,a:0,w:0,stg:0,prevA:0,fwdT:-9,revT:-9,jit:0};
-  var GCAM_D=[1.4,53.5,52.7,58,50], GCAM_M=[1.5,33.3,57.8,46,67];
+  var GCAM_D=[1.44,49,55,55,48], GCAM_M=[1.5,42,57,48,60];
   var doseBlurF=$('doseBlurF'), doseEl=$('dose'), doseCup=$('doseCup'), doseSh=$('doseSh'), doseFull=$('doseFull'), moundE=$('moundE'), groundsG=$('grounds'), dustG=$('dust');
   function apply(P0){
     var p, g;
-    // the grind stage is gone: beans in, then straight to the pour
-    if(P0<=.45){p=P0*(0.5/.45); g=0;} else {p=.5+(P0-.45)/.55*.5; g=0;}
+    // beans fill a little faster, then the grind runs inside the same stage as the cup coming down
+    if(P0<=.38){p=P0*(0.5/.38); g=0;} else {var u=(P0-.38)/.62; p=.5+u*.5; g=clamp(u/.40,0,1);}
     G.g=g; G.a=clamp((g-.24)/.5,0,1);
     G.w=ease(clamp(g/.14,0,1))*(1-ease(clamp((g-.8)/.2,0,1)));
-    G.stg=P0<.06?0:P0<.46?1:2;
+    G.stg=P0<.06?0:P0<.39?1:2;
     G.boil=ease(clamp((P0-.425)/.07,0,1));
     applyBase(p); applyGrind();
   }
   function applyGrind(){
     var g=G.g, on=g>0&&g<1;
     doseEl.style.display=on?'':'none'; if(!on) return;
-    // brought in from the camera side like a hand would: large, soft and low, settling onto the fork
+    // lowered straight down from above like the cup, then lifted straight back up once it is full
     var sm=function(t){return t*t*t*(t*(t*6-15)+10)};
-    var e=clamp(g/.22,0,1), ee=sm(e), a1=clamp(ee/.88,0,1), k=1-a1;
-    var sc=1+1.7*k*k, dx=-70*k, dy=520*k*k*(1.2-.2*k)-3*Math.sin(Math.PI*a1)*k+3.5*sm(clamp((ee-.88)/.12,0,1))-3.5, rot=-5*k, bl=2.6*k*k;
-    // picked up the same way: a small lift off the fork, then carried back toward the camera and away to the right
-    var x=clamp((g-.8)/.2,0,1), up=sm(clamp(x/.3,0,1)), c=sm(clamp((x-.22)/.78,0,1));
-    dy+=-5*up+420*c*c; dx+=260*c; sc*=1+1.5*c*c; rot+=5*c; bl+=2.4*c*c;
-    doseCup.setAttribute('transform','translate('+dx.toFixed(2)+' '+dy.toFixed(2)+') translate(340 648) scale('+sc.toFixed(4)+') rotate('+rot.toFixed(2)+') translate(-340 -648)');
-    doseBlurF.setAttribute('stdDeviation',bl.toFixed(2)); doseCup.setAttribute('filter',bl>.05?'url(#doseBlur)':'');
-    doseSh.setAttribute('opacity',(Math.pow(sm(clamp((ee-.75)/.25,0,1)),2)*(1-.6*up)*(1-clamp(x/.3,0,1))).toFixed(3));
+    var e=clamp(g/.26,0,1), ee=sm(e);
+    var x=clamp((g-.74)/.14,0,1), up=sm(x);
+    var dy=-560*(1-ee) - 620*up*up;
+    doseCup.setAttribute('transform','translate(0 '+dy.toFixed(2)+')');
+    doseCup.setAttribute('opacity',(Math.min(1,e*4)*(1-clamp((x-.4)/.6,0,1))).toFixed(3));
+    doseCup.setAttribute('filter',''); doseBlurF.setAttribute('stdDeviation','0');
+    doseSh.setAttribute('opacity',(Math.pow(sm(clamp((ee-.7)/.3,0,1)),2)*(1-clamp(x/.35,0,1))).toFixed(3));
     var a=G.a; doseFull.style.display=a>0?'':'none';
     moundE.setAttribute('rx',(4+33*Math.sqrt(a)).toFixed(2)); moundE.setAttribute('ry',(2+17.5*a).toFixed(2)); moundE.setAttribute('cy',(592-2.5*a).toFixed(2));
   }
@@ -90,7 +89,7 @@
     var lidOpen=ease(clamp((p-.05)/.07,0,1))*(1-ease(clamp((p-.43)/.06,0,1)));
     lid.setAttribute('transform','translate(0,'+(-240*lidOpen).toFixed(1)+')'); lid.setAttribute('opacity',(1-clamp((lidOpen-.35)/.5,0,1)).toFixed(3));
     // the hopper gives up about 30% of its beans while the cup fills
-    var L=clamp((p-.12)/.3,0,1); st.L=L; st.Lv=L*(1-.26*G.a)*(1-.30*pourDraw);
+    var L=clamp((p-.12)/.3,0,1); st.L=L; st.Lv=L*(1-.15*G.a)*(1-.15*pourDraw);
     
     var Lv=st.Lv, lvl=298-Lv*118, a=lvl+7, b=lvl-7-6*Lv;
     var dP='M190 320 L190 '+(lvl+7).toFixed(1);
@@ -112,7 +111,7 @@
     if(G.w>0){var GC=mob?GCAM_M:GCAM_D, w=G.w; s+=(GC[0]-s)*w; fx+=(GC[1]-fx)*w; fy+=(GC[2]-fy)*w; gx+=(GC[3]-gx)*w; gy+=(GC[4]-gy)*w;}
     if(G.jit>0&&!reduce){gx+=(Math.random()-.5)*.09*G.jit; gy+=(Math.random()-.5)*.09*G.jit;}
     var ox=gx-(50+(fx-50)*s), oy=gy-(50+(fy-50)*s);
-    var ze=1+.08*focus*clamp((p-.7)/.08,0,1);
+    var ze=1+0.12*focus*clamp((p-.7)/.08,0,1);
     if(ze>1.0001){var Ax=50+ox+(65-50)*s, Ay=50+oy+(14-50)*s; ox=Ax*(1-ze)+ze*(50+ox)-50; oy=Ay*(1-ze)+ze*(50+oy)-50; s=s*ze;}
     cam.style.transformOrigin='50% 50%';
     cam.style.transform='translate(calc(-50% + '+ox.toFixed(3)+'%),calc(-50% + '+oy.toFixed(3)+'%)) scale('+s.toFixed(4)+')';
@@ -122,7 +121,7 @@
     vig.style.opacity=(.35+.55*clamp((p-.5)/.25,0,1)).toFixed(3);
     veil.style.opacity=0;
     // espresso cup rises into place
-    var c=clamp((p-.63)/.09,0,1), ce=easeOut(c); st.cupIn=c;
+    var c=clamp((p-.668)/.052,0,1), ce=easeOut(c); st.cupIn=c;  // the cup drops in quickly as the dosing cup lifts away
     cup.setAttribute('transform','translate(0,'+(-60*(1-ce)).toFixed(1)+')');
     cup.setAttribute('opacity',clamp(c*2.2,0,1).toFixed(3));
     cupShadow.setAttribute('opacity',(ce*ce).toFixed(3));
@@ -293,9 +292,9 @@
     }
   }
   // autoplay: glide from stage to stage with a short pause; the pour stage waits for the cup to fill
-  var STOPS=[0,.45,.86], MOVE=[0,3300,3000], PAUSES=[0,1700,600];
-  var auto={on:false,armed:false,touched:false,timer:null,anim:null,idle:null};
-  function resume(){auto.on=true; queue();}
+  var STOPS=[0,.38,.86], MOVE=[0,3000,4400], PAUSES=[0,1700,600];
+  var auto={on:false,armed:false,touched:false,done:false,timer:null,anim:null,idle:null};
+  function resume(){ if(auto.done) return; auto.on=true; queue();}
   function storyY(p){var r=story.getBoundingClientRect();return scrollY+r.top+p*(story.offsetHeight-innerHeight);}
   function nextStop(){for(var i=0;i<STOPS.length;i++){if(STOPS[i]>targetP+.008)return i;}return -1;}
   function markNext(i,ms){dots.forEach(function(d,j){d.classList.remove('next');d.style.removeProperty('--wait');});
@@ -325,6 +324,7 @@
     auto.touched=true;
     auto.on=false; clearTimeout(auto.timer); cancelAnimationFrame(auto.anim); auto.anim=null; markNext(-1);
     clearTimeout(auto.idle);
+    // the visitor is in charge while they scroll; if they stop, the story carries on by itself
     if(auto.armed) auto.idle=setTimeout(resume,4000);
   }
   ['wheel','touchstart','pointerdown','keydown'].forEach(function(ev){addEventListener(ev,userTook,{passive:true});});
@@ -334,7 +334,7 @@
     var r=story.getBoundingClientRect(), total=story.offsetHeight-innerHeight;
     targetP=clamp(-r.top/total,0,1);
     // autoplay waits for the visitor: it only starts once they have scrolled into the story themselves
-    if(!reduce&&!auto.armed&&auto.touched&&targetP>.004){auto.armed=true; clearTimeout(auto.idle); auto.idle=setTimeout(resume,900);}
+    if(!reduce&&!auto.done&&!auto.armed&&auto.touched&&targetP>.004){auto.armed=true; clearTimeout(auto.idle); auto.idle=setTimeout(resume,900);}
     nav.classList.toggle('solid', scrollY>20); nav.classList.toggle('over-hero', r.bottom>80 && document.querySelector('main[data-page="home"]') && !document.querySelector('main[data-page="home"]').hidden);
     hint.style.opacity=targetP>0.03?0:1;
   }

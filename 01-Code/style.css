@@ -25,7 +25,7 @@ a{color:inherit}
 
 /* nav */
 .nav{position:fixed;top:0;left:0;right:0;z-index:50;padding-top:env(safe-area-inset-top,0px);transition:background .3s,box-shadow .3s}
-.nav.solid{background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 1px 0 var(--line)}
+.nav.solid{background:color-mix(in srgb,var(--ground) 96%,transparent);box-shadow:0 1px 0 var(--line)}
 .nav-in{display:flex;align-items:center;gap:32px;height:72px}
 .logo{font-family:var(--serif);font-size:30px;letter-spacing:-.01em;text-decoration:none;line-height:1}
 .logo span{font-style:italic;color:var(--crema)}
@@ -70,7 +70,7 @@ h1{font-size:clamp(52px,7.4vw,104px);line-height:.92}
 .bean{display:none;position:absolute;width:var(--w);opacity:.98;will-change:transform;filter:drop-shadow(0 14px 14px rgba(42,29,22,.22));pointer-events:none}
 .bean img{width:100%;animation:bob var(--t,6s) ease-in-out infinite alternate}
 @keyframes bob{from{transform:translateY(-8px) rotate(-6deg)}to{transform:translateY(10px) rotate(8deg)}}
-.chip{position:absolute;z-index:4;display:flex;align-items:center;gap:8px;padding:7px 12px 7px 9px;border-radius:999px;background:color-mix(in srgb,var(--chip) 62%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);color:var(--ink-soft);font-size:12px;font-weight:500;box-shadow:0 6px 18px -12px rgba(42,29,22,.3);opacity:0;transform:translateY(8px);transition:opacity .6s,transform .6s;white-space:nowrap}
+.chip{position:absolute;z-index:4;display:flex;align-items:center;gap:8px;padding:7px 12px 7px 9px;border-radius:999px;background:color-mix(in srgb,var(--chip) 62%,transparent);border:1px solid var(--line);color:var(--ink-soft);font-size:12px;font-weight:500;box-shadow:0 6px 18px -12px rgba(42,29,22,.3);opacity:0;transform:translateY(8px);transition:opacity .6s,transform .6s;white-space:nowrap}
 .chip.on{opacity:1;transform:none}
 .chip svg{width:15px;height:15px;flex:none;color:var(--crema)}
 .progress{position:absolute;right:max(20px,calc((100vw - 1200px)/2));top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px}
@@ -364,9 +364,9 @@ h1[tabindex="-1"]:focus{outline:none}
 .cast{position:absolute;left:52%;top:62%;width:58%;height:26%;background:radial-gradient(60% 60% at 30% 40%,rgba(70,40,18,.32),rgba(70,40,18,0) 70%);transform:skewX(-38deg);transform-origin:0 100%;filter:blur(14px);pointer-events:none}
 .contact{position:absolute;left:14%;top:84.5%;width:76%;height:6%;background:radial-gradient(50% 50% at 50% 50%,rgba(55,32,15,.42),rgba(55,32,15,0) 72%);filter:blur(6px);pointer-events:none}
 .key{position:absolute;left:52%;top:52%;width:28%;height:32%;background:radial-gradient(50% 50% at 50% 50%,rgba(255,214,160,.55),rgba(255,214,160,0) 70%);mix-blend-mode:screen;opacity:0;pointer-events:none;transition:opacity .4s}
-.vig{position:absolute;inset:0;pointer-events:none;z-index:1;background:radial-gradient(120% 95% at 58% 52%,transparent 52%,rgba(62,36,16,.32) 100%);opacity:.35}
+.vig{display:none}
 .fg{position:absolute;pointer-events:none;z-index:3;will-change:transform,opacity;opacity:0}
-.fg img{width:100%;filter:blur(11px) brightness(.85) saturate(1.05)}
+.fg img{width:100%;filter:blur(5px) brightness(.85) saturate(1.05)}
 .fg.a{width:12vmin;left:-4vmin;bottom:4vh}
 .fg.b{width:10vmin;right:4vmin;top:14vh}
 .fg.c{width:10vmin;right:-3vmin;bottom:-3vh}
@@ -413,3 +413,6 @@ h1[tabindex="-1"]:focus{outline:none}
 .fb img{animation:bob var(--t,7s) ease-in-out infinite alternate}
 .fb.soft{filter:blur(1.6px) drop-shadow(0 10px 8px rgba(42,29,22,.18))}
 @media (prefers-reduced-motion:reduce){.fb img{animation:none}}
+
+/* lighter scroll effects: the sun rays and the extra foreground bean cost the most on phones and tablets */
+@media (max-width:900px){.set .sun{display:none}.fg.c{display:none}.vig{opacity:.2}}
