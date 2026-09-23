@@ -76,15 +76,15 @@
 
         <div class="scene" id="scene">
           <div class="lens" id="lens"><div class="cam" id="cam">
-            <div class="set" aria-hidden="true"><i class="wall"></i><i class="sun"></i></div>
+            <div class="set" aria-hidden="true"><i class="wall"></i><i class="table"></i><i class="edge"></i><i class="sun"></i><i class="shade"></i></div>
             <i class="disc" aria-hidden="true"></i>
             <div class="cast" aria-hidden="true"></div><div class="contact" aria-hidden="true"></div>
-            <img class="mach" id="mach" src="images/machine.webp" alt="Matte-black espresso machine with a glass bean hopper and built-in grinder">
+            <div class="mach" id="mach" role="img" aria-label="Brushed stainless and matte-black espresso machine with a glass bean hopper"></div>
             <div class="gb" aria-hidden="true" style="--x:11%;--y:89%;--w:3.4%;--r:-28deg"><img src="images/bean-5.webp" alt=""></div>
-            <div class="gb" aria-hidden="true" style="--x:16.5%;--y:90.6%;--w:2.9%;--r:64deg"><img src="images/bean-4.webp" alt=""></div>
-            <div class="gb" aria-hidden="true" style="--x:90%;--y:88%;--w:3.1%;--r:12deg"><img src="images/bean-7.webp" alt=""></div>
+            <div class="gb" aria-hidden="true" style="--x:16.5%;--y:90.6%;--w:2.9%;--r:64deg"><img src="images/bean-1.webp" alt=""></div>
+            <div class="gb" aria-hidden="true" style="--x:90%;--y:88%;--w:3.1%;--r:12deg"><img src="images/bean-2.webp" alt=""></div>
             <div class="fb" aria-hidden="true" style="--x:13%;--y:30%;--w:3.8%;--r:-35deg;--t:6.8s"><img src="images/bean-5.webp" alt=""></div>
-            <div class="fb soft" aria-hidden="true" style="--x:91%;--y:22%;--w:3.2%;--r:48deg;--t:7.6s"><img src="images/bean-4.webp" alt=""></div>
+            <div class="fb soft" aria-hidden="true" style="--x:91%;--y:22%;--w:3.2%;--r:48deg;--t:7.6s"><img src="images/bean-1.webp" alt=""></div>
             <svg class="fx" viewBox="0 0 1024 1024" aria-hidden="true">
               <defs>
                 <clipPath id="glass"><path d="M200 172 L410 172 L410 214 L403 244 L390 268 L374 290 L358 299 L252 299 L234 289 L217 267 L205 242 L200 212 Z"/></clipPath>
@@ -92,62 +92,63 @@
                 <linearGradient id="glassHi" x1="0" x2="1" y1="0" y2="0">
                   <stop offset="0" stop-color="#fff" stop-opacity=".0"/><stop offset=".12" stop-color="#fff" stop-opacity=".28"/><stop offset=".2" stop-color="#fff" stop-opacity="0"/><stop offset=".86" stop-color="#fff" stop-opacity="0"/><stop offset=".93" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
                 </linearGradient>
-                <radialGradient id="bowl" cx=".5" cy=".62" r=".6"><stop offset="0" stop-color="#2b2420"/><stop offset=".8" stop-color="#15110f"/><stop offset="1" stop-color="#0b0908"/></radialGradient>
                 <linearGradient id="sg" x1="0" x2="1" y1="0" y2="0">
                   <stop offset="0" stop-color="#4d250b"/><stop offset=".45" stop-color="#b06d2d"/><stop offset=".6" stop-color="#e0a566"/><stop offset="1" stop-color="#5a2c0e"/>
                 </linearGradient>
                 <radialGradient id="shadowG" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#140c07" stop-opacity=".5"/><stop offset="1" stop-color="#140c07" stop-opacity="0"/></radialGradient>
-                <clipPath id="mouthC"><ellipse cx="627" cy="670.4" rx="47.4" ry="27.9"/></clipPath>
                 <clipPath id="fallC"><rect x="0" y="-200" width="1024" height="374"/><path d="M200 172 L410 172 L410 214 L403 244 L390 268 L374 290 L358 299 L252 299 L234 289 L217 267 L205 242 L200 212 Z"/></clipPath>
-                <filter id="mblur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="0.35 2.2"/></filter>
-                <image id="beanA" href="images/bean-4.webp" width="24" height="24" x="-12" y="-12"/>
+                <image id="beanA" href="images/bean-3.webp" width="24" height="24" x="-12" y="-12"/>
                 <image id="beanB" href="images/bean-7.webp" width="21" height="24" x="-10.5" y="-12"/>
+                <mask id="openM" maskUnits="userSpaceOnUse" x="545" y="615" width="165" height="125"><image href="images/cup-mask.webp" x="545" y="615" width="165" height="125"/></mask>
                 <clipPath id="levelC"><rect id="levelR" x="580" y="672" width="160" height="0"/></clipPath>
                 <linearGradient id="sgv" gradientUnits="userSpaceOnUse" x1="0" y1="611" x2="0" y2="668">
                   <stop offset="0" stop-color="#241005"/><stop offset=".4" stop-color="#5e2f10"/><stop id="sgEnd" offset="1" stop-color="#9a5a24"/>
                 </linearGradient>
                 <radialGradient id="scrGlow" cx=".5" cy=".35" r=".8"><stop offset="0" stop-color="#3b5a78" stop-opacity=".35"/><stop offset="1" stop-color="#3b5a78" stop-opacity="0"/></radialGradient>
-                <clipPath id="doseTopC"><rect x="296" y="530" width="88" height="58.6"/><ellipse cx="340" cy="588.9" rx="24.6" ry="4.5"/></clipPath>
-                <radialGradient id="moundG"><stop offset="0" stop-color="#fff"/><stop offset=".62" stop-color="#fff"/><stop offset="1" stop-color="#000"/></radialGradient>
-                <mask id="moundM" maskUnits="userSpaceOnUse" x="280" y="520" width="120" height="100"><ellipse id="moundE" cx="340" cy="589.5" rx="0" ry="0" fill="url(#moundG)"/></mask>
-                <radialGradient id="doseShG"><stop offset="0" stop-color="#050302" stop-opacity=".75"/><stop offset="1" stop-color="#050302" stop-opacity="0"/></radialGradient>
-                <filter id="gBlur" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.1"/></filter>
-                <filter id="doseBlur" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur id="doseBlurF" stdDeviation="0"/></filter>
-                <filter id="dustB" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation=".7"/></filter>
+                <linearGradient id="rimG" x1="0" x2="1"><stop offset="0" stop-color="#9c978f"/><stop offset=".3" stop-color="#eeebe6"/><stop offset=".55" stop-color="#a7a29a"/><stop offset=".8" stop-color="#f4f2ee"/><stop offset="1" stop-color="#8f8a82"/></linearGradient>
                 <filter id="soft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5"/></filter>
               </defs>
-              <!-- beans filling the hopper -->
-              <g clip-path="url(#glass)"><g clip-path="url(#fillc)">
-                <image href="images/hopper-beans.webp" x="195" y="170" width="220" height="133" preserveAspectRatio="none" opacity=".97"/>
-              </g></g>
-              <g clip-path="url(#glass)"><g id="resting" style="filter:drop-shadow(0 1.4px 1.1px rgba(22,11,5,.6))"></g></g>
-              <g id="falling" clip-path="url(#fallC)"></g>
-              <rect x="200" y="172" width="210" height="128" fill="url(#glassHi)" clip-path="url(#glass)"/>
-              <!-- lid -->
-              <image id="lid" href="images/hopper-lid.webp" x="186" y="136" width="242" height="42"/>
-              <!-- the two glasses that start under the spout -->
-              <g id="glasses" style="display:none">
-                <image href="images/glasses-on-tray.webp" x="540" y="626" width="250" height="150"/>
+              <!-- new machine: brushed stainless + matte black (Gemini, upscaled); its lid is a separate layer so it can lift -->
+              <image href="images/machine-v2.webp" x="0" y="0" width="1024" height="1024"/>
+              <!-- open hopper rim, seen when the lid lifts -->
+              <ellipse cx="406" cy="195" rx="118" ry="5.5" fill="#fff" fill-opacity=".12" stroke="url(#rimG)" stroke-width="2.2"/>
+              <g transform="matrix(1.124 0 0 0.787 63.2 62.6)">
+                <!-- beans filling the hopper -->
+                <g clip-path="url(#glass)"><g clip-path="url(#fillc)">
+                  <image href="images/hopper-beans.webp" x="195" y="170" width="220" height="133" preserveAspectRatio="none" opacity=".97"/>
+                </g></g>
+                <g clip-path="url(#glass)"><g id="resting" style="filter:drop-shadow(0 1.4px 1.1px rgba(22,11,5,.6))"></g></g>
+                <g id="falling" clip-path="url(#fallC)"></g>
+                <rect x="200" y="172" width="210" height="128" fill="url(#glassHi)" clip-path="url(#glass)"/>
               </g>
-              <!-- black cup: photographed empty on this machine, the espresso rises inside it -->
-              <ellipse id="cupShadow" cx="660" cy="763" rx="80" ry="7" fill="url(#shadowG)" opacity="0"/>
-              <g id="cup" opacity="0">
-                <image href="images/cup-empty.webp" x="584" y="636" width="196" height="130"/>
-                <g id="liqG" clip-path="url(#levelC)">
-                  <image href="images/cup-espresso-surface.webp" x="590" y="640" width="142" height="32"/>
-                  <ellipse id="tint" cx="661" cy="656" rx="70" ry="14" fill="#2c1407" opacity=".55"/>
-                  <g id="ripples" fill="none" stroke="#e9bd84" stroke-width=".8"></g>
+              <!-- lid (cut from the photo itself) -->
+              <image id="lid" href="images/hopper-lid-v2.webp" x="276" y="150" width="264" height="44.5"/>
+              <!-- the Dalla bag pours the beans (IMG_4159, cut out); pivots on its mouth, which sits over the hopper -->
+              <g id="bag" style="display:none;filter:drop-shadow(0 16px 14px rgba(42,29,22,.22))"><image href="images/dalla-bag.webp" x="-268.0" y="-273.3" width="310" height="317.9"/></g>
+              <g id="glasses" style="display:none"></g>
+              <g transform="matrix(0.66 0 0 0.66 180.74 229.42)">
+                <!-- black cup: photographed empty, the espresso rises inside it; sits on the raised cup rack -->
+                <ellipse id="cupShadow" cx="657" cy="755" rx="74" ry="6" fill="url(#shadowG)" opacity="0"/>
+                <g id="cup" opacity="0">
+                  <g transform="matrix(1.51515 0 0 1.51515 -273.85 -347.61)"><g transform="translate(612 727.75) scale(0.86) translate(-612 -727.75)">
+                    <!-- the photographed cup (Gemini, upscaled), cut out; its opening is painted empty so the real crema can rise into it -->
+                    <image href="images/cup-v2.webp" x="545" y="615" width="165" height="125"/>
+                    <g id="liqG" mask="url(#openM)" style="opacity:0">
+                      <g id="crem"><image href="images/crema.webp" x="545" y="615" width="165" height="125"/></g>
+                      <ellipse id="tint" cx="612" cy="648" rx="50" ry="13" fill="#231006" opacity=".6"/>
+                      <g id="ripples" fill="none" stroke="#f0c992" stroke-width=".5"></g>
+                    </g></g>
+                  </g>
                 </g>
+                <path id="streamA" fill="url(#sgv)"/><path id="streamB" fill="url(#sgv)"/>
+                <ellipse id="dropA" rx="1.3" ry="2" fill="#6b3510" opacity="0"/>
+                <g id="steam" filter="url(#soft)" fill="none" stroke="#fffaf2" stroke-linecap="round" stroke-width="8"><path/><path/><path/></g>
               </g>
-              <path id="streamA" fill="url(#sgv)"/><path id="streamB" fill="url(#sgv)"/>
-              <ellipse id="dropA" rx="1.3" ry="2" fill="#6b3510" opacity="0"/>
-              <!-- portafilter handle sits in front of the cups -->
-              <image href="images/portafilter-handle.webp" x="656" y="526" width="96" height="144"/>
-              <g id="steam" filter="url(#soft)" fill="none" stroke="#fffaf2" stroke-linecap="round" stroke-width="8"><path/><path/><path/></g>
-              <!-- the machine's own touch screen shows the shot -->
+              <!-- the machine's own touch screen shows the grind and the shot (covers the photo's placeholder icons) -->
+              <g transform="matrix(0.9077 0.02308 0.0952 0.976 289.64 -37.6)">
               <g id="screen" font-family="Manrope, system-ui, sans-serif">
-                <rect x="274" y="406" width="130" height="84" rx="3" fill="#141b24"/>
-                <rect x="274" y="406" width="130" height="84" rx="3" fill="url(#scrGlow)"/>
+                <rect x="271" y="403" width="136" height="90" rx="5" fill="#141b24"/>
+                <rect x="271" y="403" width="136" height="90" rx="5" fill="url(#scrGlow)"/>
                 <text id="scrState" x="282" y="420" font-size="7.5" fill="#a9bccd" font-weight="600">Ready</text>
                 <text x="396" y="420" font-size="7.5" fill="#a9bccd" text-anchor="end">Double shot</text>
                 <text id="scrTime" x="339" y="453" font-size="25" fill="#f3e7d8" font-weight="600" text-anchor="middle">0:00</text>
@@ -156,29 +157,12 @@
                 <text x="282" y="481" font-size="8" fill="#c9d4df">93°C</text>
                 <text x="339" y="481" font-size="8" fill="#c9d4df" text-anchor="middle">9 bar</text>
                 <text id="scrG" x="396" y="481" font-size="8" fill="#c9d4df" text-anchor="end">0 g</text>
-              </g>
-            <!-- pressure gauges: boiler wakes with the grinder, brew pressure climbs to 9 bar during the shot -->
-              <g id="gauges">
-                <g filter="url(#gBlur)"><path d="M729.6 377.0 L713.1 393.8" stroke="rgb(191, 186, 175)" stroke-width="4.4" stroke-linecap="round"/><path d="M729.6 377.0 L740.5 368.2" stroke="rgb(198, 194, 179)" stroke-width="7.4" stroke-linecap="round"/><circle cx="729.6" cy="377.0" r="4.6" fill="rgb(198, 194, 179)"/></g>
-                <g id="needleB" transform="rotate(225 729.6 377.0)" style="filter:drop-shadow(.6px .9px .5px rgba(0,0,0,.35))">
-                  <path d="M728.45 382.50 L730.75 382.50 L729.92 356.00 L729.28 356.00 Z" fill="#17120e"/>
-                  <circle cx="729.6" cy="377.0" r="2.3" fill="#1f1914"/><circle cx="729.10" cy="376.50" r=".7" fill="#6d645a"/>
-                </g>
-                <g filter="url(#gBlur)"><path d="M778.5 541.2 L761.7 558.3" stroke="rgb(176, 168, 152)" stroke-width="4.4" stroke-linecap="round"/><path d="M778.5 541.2 L789.4 532.4" stroke="rgb(172, 162, 144)" stroke-width="7.4" stroke-linecap="round"/><circle cx="778.5" cy="541.2" r="4.6" fill="rgb(172, 162, 144)"/></g>
-                <g id="needleP" transform="rotate(225 778.5 541.2)" style="filter:drop-shadow(.6px .9px .5px rgba(0,0,0,.35))">
-                  <path d="M777.35 546.70 L779.65 546.70 L778.82 519.70 L778.18 519.70 Z" fill="#17120e"/>
-                  <circle cx="778.5" cy="541.2" r="2.3" fill="#1f1914"/><circle cx="778.00" cy="540.70" r=".7" fill="#6d645a"/>
-                </g>
-              </g>
-              <!-- grind stage: a dosing cup is set under the grinder, fills with fresh grounds and is carried away -->
-              <g id="dose" style="display:none">
-                <ellipse id="doseSh" cx="340" cy="646.5" rx="29" ry="3.2" fill="url(#doseShG)" opacity="0"/>
-                <g id="doseCup">
-                  <image href="images/dose-empty.webp" x="312.6" y="576" width="54.8" height="72"/>
-                  <image id="doseFull" href="images/dose-full.webp" x="312.6" y="576" width="54.8" height="72" mask="url(#moundM)" clip-path="url(#doseTopC)" style="display:none"/>
-                </g>
-                <g id="grounds" clip-path="url(#doseTopC)"></g>
-                <g id="dust" filter="url(#dustB)"></g>
+              </g></g>
+              <!-- old-machine parts kept only so the script has its hooks; hidden on this machine -->
+              <g style="display:none">
+                <g id="gauges"><g id="needleB"></g><g id="needleP"></g></g>
+                <g id="dose"><ellipse id="doseSh"/><g id="doseCup"><image id="doseFull"/></g><g id="grounds"></g><g id="dust"></g>
+                  <filter id="doseBlur"><feGaussianBlur id="doseBlurF" stdDeviation="0"/></filter><mask id="moundM"><ellipse id="moundE"/></mask></g>
               </g>
             </svg>
             <div class="key" id="key" aria-hidden="true"></div>
@@ -186,18 +170,18 @@
           </div></div>
 
           <div class="spray" id="spray" aria-hidden="true"></div>
-          <div class="bean" data-depth="-1" style="--w:9%;right:6%;top:8%;--t:7s"><img src="images/bean-4.webp" alt=""></div>
+          <div class="bean" data-depth="-1" style="--w:9%;right:6%;top:8%;--t:7s"><img src="images/bean-1.webp" alt=""></div>
           <div class="bean" data-depth="0.8" style="--w:11%;right:2%;bottom:18%;--t:6.2s"><img src="images/bean-5.webp" alt=""></div>
 
           <div class="chip" data-chip="0" style="left:0;bottom:1%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10l-1 5H8z"/><path d="M8 8v4a4 4 0 0 0 8 0V8"/><path d="M12 16v5"/></svg>Roasted every Tuesday</div>
           <div class="chip" data-chip="1" style="right:-2%;top:3%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="13" rx="2"/><path d="M8 21h8"/></svg>Ground to order</div>
-        </div>
+                  </div>
       </div>
       <div class="vig" id="vig" aria-hidden="true"></div>
-      <div class="fg a" aria-hidden="true"><img src="images/bean-4.webp" alt=""></div><div class="fg b" aria-hidden="true"><img src="images/bean-7.webp" alt=""></div><div class="fg c" aria-hidden="true"><img src="images/bean-4.webp" alt=""></div>
+      <div class="fg a" aria-hidden="true"><img src="images/bean-1.webp" alt=""></div><div class="fg b" aria-hidden="true"><img src="images/bean-2.webp" alt=""></div><div class="fg c" aria-hidden="true"><img src="images/bean-1.webp" alt=""></div>
       <div class="progress" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
       <div class="hint" id="hint">Scroll</div>
-      <template id="beanSrc"><img src="images/bean-5.webp" alt=""><img src="images/bean-7.webp" alt=""><img src="images/bean-4.webp" alt=""></template>
+      <template id="beanSrc"><img src="images/bean-5.webp" alt=""><img src="images/bean-2.webp" alt=""><img src="images/bean-1.webp" alt=""></template>
     </div>
   </section>
 

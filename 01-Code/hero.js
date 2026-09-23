@@ -11,18 +11,19 @@
   var ease=function(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2};
   var easeOut=function(t){return 1-Math.pow(1-t,3)};
   var $=function(id){return document.getElementById(id)};
-  var focus=0, fgEls=[].slice.call(document.querySelectorAll('.fg')), vig=$('vig'), keyEl=$('key');
+  var focus=0, fgEls=[].slice.call(document.querySelectorAll('.fg')), vig=$('vig'), keyEl=$('key'), paused=false;
   var CAM_D=[[0,1,50,50,50,50],[.1,1.02,49,49,50,50],[.3,1.08,40,40,46,45],[.46,1.08,40,40,46,45],[.58,1.05,50,54,50,52],[.78,1.3,48,56,50,55],[1,1.3,48,56,50,55]];
-  var CAM_M=[[0,1,50,50,50,50],[.1,1.02,49,49,50,50],[.3,1.08,47,44,49,46],[.46,1.08,47,44,49,46],[.58,1.05,50,54,50,52],[.78,1.3,51,57,50,55],[1,1.3,51,57,50,55]];
+  var CAM_M=[[0,1,50,50,50,50],[.1,1.02,49,49,50,50],[.3,1.08,47,44,49,46],[.46,1.08,47,44,49,46],[.58,1.05,50,54,50,52],[.78,1.13,54,56,50,56],[1,1.13,54,56,50,56]];
   var fillPath=$('fillPath'), lid=$('lid'), glasses=$('glasses'), cup=$('cup'), cupShadow=$('cupShadow');
   var liqG=$('liqG'), levelR=$('levelR'), tint=$('tint'), streamA=$('streamA'), streamB=$('streamB'), dropA=$('dropA');
   var sgEnd=$('sgEnd'), scrState=$('scrState'), scrTime=$('scrTime'), scrBar=$('scrBar'), scrG=$('scrG'), rip=$('ripples');
   var steamEls=[].slice.call(document.querySelectorAll('#steam path'));
   var ripEls=[]; for(var r=0;r<3;r++){var el=document.createElementNS('http://www.w3.org/2000/svg','ellipse'); rip.appendChild(el); ripEls.push(el);}
+  // beans raining into the hopper
   // a real pour: beans stream in from above the frame, bounce once on the pile and stay there;
-  // the pile rises underneath them and slowly covers the older ones. Scrolling back up plays it in reverse.
+  // the pile rises underneath them and slowly covers the older ones
   var NS='http://www.w3.org/2000/svg', falling=$('falling'), restG=$('resting'), pool=[], rest=[], restFree=[], nextClump=0;
-  for(var i=0;i<60;i++){
+  for(var i=0;i<120;i++){
     var u=document.createElementNS(NS,'use'); u.setAttribute('href',i%3?'#beanA':'#beanB'); u.style.display='none'; falling.appendChild(u);
     pool.push({el:u,on:false});
   }
@@ -30,13 +31,23 @@
   function spawnPour(t,n){
     for(var i=0,k=0;i<pool.length&&k<n;i++){
       var b=pool[i]; if(b.on) continue; k++;
-      b.on=true; b.rev=false; b.x=288+Math.random()*34; b.y=-70-Math.random()*50; b.vx=(Math.random()-.5)*60; b.vy=150+Math.random()*90;
-      b.r=Math.random()*360; b.spin=(Math.random()<.5?-1:1)*(260+Math.random()*420); b.s=.72+Math.random()*.22; b.bounce=0; b.t0=t;
+      b.on=true; b.rev=false; b.x=BAG_X+(Math.random()-.5)*10; b.y=BAG_Y-4+Math.random()*6-k*2.5; b.vx=14+(Math.random()-.5)*44; b.vy=40+Math.random()*90;
+      if(Math.random()<.1) b.vx=Math.random()<.5?-18-Math.random()*22:48+Math.random()*24; // the odd bean that slips off the side of the lip
+      b.r=Math.random()*360; b.spin=(Math.random()<.5?-1:1)*(120+Math.random()*480); b.s=.66+Math.random()*.32; b.bounce=0; b.t0=t;
+    }
+  }
+  function spawnClump(t,rev,lvlY){ // reverse only: beans leave the pile and fly back out when scrolling up
+    var n=5+Math.floor(Math.random()*4), cx=292+Math.random()*28, vx0=(Math.random()-.5)*30;
+    for(var i=0,k=0;i<pool.length&&k<n;i++){
+      var b=pool[i]; if(b.on) continue; k++;
+      b.on=true; b.rev=true; b.t0=t+Math.random()*.06; b.x0=cx+(Math.random()-.5)*26; b.y0=70+(Math.random()-.5)*22;
+      b.vx=vx0+(Math.random()-.5)*46; b.r0=Math.random()*360; b.spin=(Math.random()<.5?-1:1)*(240+Math.random()*420); b.s=.82+Math.random()*.3;
+      b.ys=lvlY+2; b.xs=b.x0+(Math.random()-.5)*60; b.up=Math.sqrt(2*1500*Math.max(40,b.ys-b.y0)); b.dur=b.up/1500;
     }
   }
   function rise(t,x,y,href,s,r){ // the fall played backwards: leaves the pile fast, slows as it climbs, exits above the frame
     for(var i=0;i<pool.length;i++){var b=pool[i]; if(b.on) continue;
-      b.on=true; b.rev=true; b.t0=t; b.xs=x; b.ys=y; b.x1=288+Math.random()*34; b.yTop=-80-Math.random()*50;
+      b.on=true; b.rev=true; b.t0=t; b.xs=x; b.ys=y; b.x1=BAG_X+(Math.random()-.5)*12; b.yTop=BAG_Y+Math.random()*6;
       b.up=Math.sqrt(2*2200*(b.ys-b.yTop)); b.dur=b.up/2200;
       b.r0=r; b.spin=(Math.random()<.5?-1:1)*(260+Math.random()*420); b.s=s;
       if(href) b.el.setAttribute('href',href); return true;}
@@ -50,19 +61,21 @@
     rest.push({el:el,x:b.x,y:b.y});
     if(rest.length>90){var o=rest.shift(); o.el.style.display='none'; restFree.push(o.el);}
   }
-  var st={p:0,L:0,cupIn:0,rainOn:0,prevL:0,fillT:-9,emptyT:-9};
+  var bagEl=$('bag'), BAG_OX=406, BAG_OY=142, BAG_X=(BAG_OX-63.2)/1.124, BAG_Y=(BAG_OY-62.6)/.787, shakeA=0;
+  var cupA=0, cupDrawn=-1;
+  var st={cupWant:0,bagIn:0,bagOut:0,p:0,L:0,cupIn:0,rainOn:0,prevL:0,fillT:-9,emptyT:-9};
   var pour={F:0,L:0,T:0,drainT:-9,fullAt:-1,Pprev:0}, pourDraw=0;
   var targetP=0,P=0,first=true,lastT=null,cur=-1,movedAt=0;
   var BUMPS=[5,8,4,7,9,5,8,6,4,9,7,5,8,6,9,4,7,8,5,6,9,7,5];
-  var SX=631, SY0=611;
+  var SX=661, SY0=610;
   // four stages on one scroll: beans in (0-.40), grind (.40-.62), pour (.62-1). The original timeline runs on p.
   var G={g:0,a:0,w:0,stg:0,prevA:0,fwdT:-9,revT:-9,jit:0};
-  var GCAM_D=[1.44,49,55,55,48], GCAM_M=[1.5,42,57,48,60];
+  var GCAM_D=[1.18,58,44,53,48], GCAM_M=[1.2,56,44,50,52];
   var doseBlurF=$('doseBlurF'), doseEl=$('dose'), doseCup=$('doseCup'), doseSh=$('doseSh'), doseFull=$('doseFull'), moundE=$('moundE'), groundsG=$('grounds'), dustG=$('dust');
   function apply(P0){
     var p, g;
-    // beans fill a little faster, then the grind runs inside the same stage as the cup coming down
-    if(P0<=.38){p=P0*(0.5/.38); g=0;} else {var u=(P0-.38)/.62; p=.5+u*.5; g=clamp(u/.40,0,1);}
+    // no grind stage on this machine: beans in, then the cup comes straight down and the shot pours
+    if(P0<=.38){p=P0*(0.5/.38);} else {var u=(P0-.38)/.62; p=u<.12?.5+(u/.12)*.168:.668+(u-.12)/.88*.332;} g=0;
     G.g=g; G.a=clamp((g-.24)/.5,0,1);
     G.w=ease(clamp(g/.14,0,1))*(1-ease(clamp((g-.8)/.2,0,1)));
     G.stg=P0<.06?0:P0<.39?1:2;
@@ -87,9 +100,10 @@
   function applyBase(p){
     // hopper: lid lifts, beans pour in, lid closes
     var lidOpen=ease(clamp((p-.05)/.07,0,1))*(1-ease(clamp((p-.43)/.06,0,1)));
-    lid.setAttribute('transform','translate(0,'+(-240*lidOpen).toFixed(1)+')'); lid.setAttribute('opacity',(1-clamp((lidOpen-.35)/.5,0,1)).toFixed(3));
-    // the hopper gives up about 30% of its beans while the cup fills
-    var L=clamp((p-.12)/.3,0,1); st.L=L; st.Lv=L*(1-.15*G.a)*(1-.15*pourDraw);
+    lid.setAttribute('transform','translate(0,'+(-240*lidOpen).toFixed(1)+')'); lid.setAttribute('opacity',(1-clamp((lidOpen-.1)/.35,0,1)).toFixed(3));
+    // Dalla bag: drops in while the lid lifts, pours for exactly the fill, rises away while the lid closes
+    st.bagIn=ease(clamp((p-.06)/.06,0,1)); st.bagOut=ease(clamp((p-.425)/.06,0,1));
+    var L=clamp((p-.12)/.3,0,1); st.L=L; st.Lv=L*(1-.25*pourDraw);
     
     var Lv=st.Lv, lvl=298-Lv*118, a=lvl+7, b=lvl-7-6*Lv;
     var dP='M190 320 L190 '+(lvl+7).toFixed(1);
@@ -103,7 +117,7 @@
     var g=ease(clamp((p-.52)/.1,0,1));
     
     glasses.setAttribute('opacity',(1-g).toFixed(3));
-    // camera: keyframed moves (slight push to the hopper, pull back, closer framing of the pour)
+    // camera: gentle push-in while filling, then a dolly down to the group head
     var z=ease(clamp((p-.52)/.22,0,1)), mob=innerWidth<900;
     var K=mob?CAM_M:CAM_D, i=0; while(i<K.length-2&&p>K[i+1][0]) i++;
     var a0=K[i], a1=K[i+1], u=ease(clamp((p-a0[0])/(a1[0]-a0[0]),0,1)), L2=function(j){return a0[j]+(a1[j]-a0[j])*u};
@@ -111,8 +125,8 @@
     if(G.w>0){var GC=mob?GCAM_M:GCAM_D, w=G.w; s+=(GC[0]-s)*w; fx+=(GC[1]-fx)*w; fy+=(GC[2]-fy)*w; gx+=(GC[3]-gx)*w; gy+=(GC[4]-gy)*w;}
     if(G.jit>0&&!reduce){gx+=(Math.random()-.5)*.09*G.jit; gy+=(Math.random()-.5)*.09*G.jit;}
     var ox=gx-(50+(fx-50)*s), oy=gy-(50+(fy-50)*s);
-    var ze=1+0.12*focus*clamp((p-.7)/.08,0,1);
-    if(ze>1.0001){var Ax=50+ox+(65-50)*s, Ay=50+oy+(14-50)*s; ox=Ax*(1-ze)+ze*(50+ox)-50; oy=Ay*(1-ze)+ze*(50+oy)-50; s=s*ze;}
+    var ze=1+(mob?.04:.12)*focus*clamp((p-.7)/.08,0,1);
+    if(ze>1.0001){var Ax=50+ox+(60-50)*s, Ay=50+oy+(63-50)*s; ox=Ax*(1-ze)+ze*(50+ox)-50; oy=Ay*(1-ze)+ze*(50+oy)-50; s=s*ze;}
     cam.style.transformOrigin='50% 50%';
     cam.style.transform='translate(calc(-50% + '+ox.toFixed(3)+'%),calc(-50% + '+oy.toFixed(3)+'%)) scale('+s.toFixed(4)+')';
     var cw=cam.offsetWidth/100, fgIn=clamp((p-.04)/.1,0,1)*(reduce?0:1);
@@ -121,10 +135,8 @@
     vig.style.opacity=(.35+.55*clamp((p-.5)/.25,0,1)).toFixed(3);
     veil.style.opacity=0;
     // espresso cup rises into place
-    var c=clamp((p-.668)/.052,0,1), ce=easeOut(c); st.cupIn=c;  // the cup drops in quickly as the dosing cup lifts away
-    cup.setAttribute('transform','translate(0,'+(-60*(1-ce)).toFixed(1)+')');
-    cup.setAttribute('opacity',clamp(c*2.2,0,1).toFixed(3));
-    cupShadow.setAttribute('opacity',(ce*ce).toFixed(3));
+    // the cup lands in one motion on its own clock once its point in the scroll is reached (see loop)
+    st.cupWant=p>=.668?1:0;
     beans.forEach(function(bn){
       var k=parseFloat(bn.dataset.depth);
       bn.style.transform='translate3d(0,'+(-p*140*k)+'px,0) rotate('+(p*90*k)+'deg)';
@@ -160,11 +172,27 @@
     if(st.L>st.prevL+1e-5) st.fillT=t; else if(st.L<st.prevL-1e-5) st.emptyT=t;
     st.prevL=st.L;
     var filling=t-st.fillT<.35&&st.L<1, emptying=t-st.emptyT<.35&&st.L>0;
+    // cup: comes down and sits in ~0.4 s in one go (no half-way stop tied to the scroll), its shadow lands with it
+    if(reduce) cupA=st.cupWant; else cupA=clamp(cupA+(st.cupWant?1:-1)*dt/.42,0,1);
+    if(cupA!==cupDrawn){cupDrawn=cupA; var ce=easeOut(cupA);
+      cup.setAttribute('transform','translate(0,'+(-60*(1-ce)).toFixed(1)+')');
+      cup.setAttribute('opacity',clamp(cupA*2.2,0,1).toFixed(3));
+      cupShadow.setAttribute('opacity',ce.toFixed(3));}
+    st.cupIn=cupA;
+    var bi=st.bagIn, bo=st.bagOut, bvis=bi>0&&bo<1;
+    bagEl.style.display=bvis?'':'none';
+    if(bvis){
+      shakeA+=(((filling||emptying)&&!reduce?1:0)-shakeA)*Math.min(1,dt*8);
+      var bx=BAG_OX-70*(1-bi)-50*bo, by=BAG_OY-400*(1-bi)-420*bo;
+      var br=-8-14*(1-bi)-10*bo+(reduce?0:.5*Math.sin(t*1.4))+shakeA*(.8*Math.sin(t*21)+.45*Math.sin(t*34));
+      bagEl.setAttribute('transform','translate('+bx.toFixed(2)+' '+by.toFixed(2)+') rotate('+br.toFixed(2)+')');
+      bagEl.setAttribute('opacity',(clamp(bi*2.5,0,1)*clamp((1-bo)*2.5,0,1)).toFixed(3));
+    }
     if(!reduce&&t>=nextClump){
-      if(filling){spawnPour(t,1+Math.floor(Math.random()*3)); nextClump=t+.06+Math.random()*.06;}
+      if(filling){var rate=.3+.7*Math.min(1,st.L/.1)*Math.min(1,(1-st.L)/.1), surge=.8+.2*Math.sin(t*5.3)+.12*Math.sin(t*11.7); spawnPour(t,1+Math.floor(Math.random()*3*rate*surge)); nextClump=t+(.04+Math.random()*.05)/rate;}
       else if(emptying){var nn=2+Math.floor(Math.random()*3); for(var q=0;q<nn;q++){var rx=292+Math.random()*28; rise(t,rx,surfaceY(rx,st.Lv)+2,null,.72+Math.random()*.22,Math.random()*360);} nextClump=t+.06+Math.random()*.06;}
     }
-    // resting beans: covered as the pile rises, lifted back out when it drops
+    // resting beans: covered as the pile rises, cleared when it drops
     for(var ri=rest.length-1;ri>=0;ri--){var rb=rest[ri], sy=surfaceY(rb.x,st.Lv);
       if(sy<rb.y-7){rb.el.style.display='none'; restFree.push(rb.el); rest.splice(ri,1);}
       else if(sy>rb.y+5&&G.a>0){rb.el.style.display='none'; restFree.push(rb.el); rest.splice(ri,1);}
@@ -184,7 +212,8 @@
       var sy=surfaceY(b.x,st.Lv);
       if(b.y>=sy){
         b.y=sy;
-        if(b.bounce<1&&b.vy>330){b.vy*=-.24; b.vx=b.vx*.5+(Math.random()-.5)*50; b.spin*=.35; b.bounce++;}
+        if(b.bounce<1&&b.vy>300){b.vy*=-(.18+Math.random()*.14); b.vx=b.vx*.4+(Math.random()-.5)*110; b.spin*=.4; b.bounce++;}
+        else if(b.bounce<2&&b.vy>200){b.vy*=-.12; b.vx*=.5; b.spin*=.5; b.bounce++;}
         else {settle(b); b.on=false; b.el.style.display='none'; return;}
       }
       if(t-b.t0>3){b.on=false;b.el.style.display='none';return;}
@@ -214,24 +243,26 @@
     keyEl.style.opacity=(seated?(.25+.75*f):0).toFixed(3);
     var ft=(!reduce&&seated&&(pour.L>0||pour.F>0)&&(sinceFull<0||sinceFull<1.6)&&!draining)?1:0; var nf=focus+(ft-focus)*Math.min(1,dt*(ft?0.9:0.7)); if(Math.abs(nf-focus)>.0004){focus=nf; apply(P);}
     // the espresso rises inside the photographed cup
-    var lvl=672-f*32;
-    levelR.setAttribute('y',lvl.toFixed(2)); levelR.setAttribute('height',(672-lvl).toFixed(2));
+    // the real crema rises inside the photographed cup: the surface starts deep and small, climbs to the rim
+    var gS=645.7+(1-f)*14, cS=.8+.2*f;
+    $('crem').setAttribute('transform','translate(612 '+gS.toFixed(2)+') scale('+cS.toFixed(4)+') translate(-612 -645.7)');
     liqG.style.opacity=f>.005?1:0;
-    tint.setAttribute('opacity',(.6*(1-clamp(f/.85,0,1))).toFixed(3));
-    var surf=Math.min(667,lvl+3), Lr=pour.L, tail=pour.T, flowing=Lr>0&&tail<1;
+    tint.setAttribute('opacity',(.75*(1-clamp(f/.8,0,1))).toFixed(3));
+    tint.setAttribute('cy',(gS+2).toFixed(2));
+    var surf=Math.min(660,(727.75+(gS-727.75)*0.86-229.42)/.66), Lr=pour.L, tail=pour.T, flowing=Lr>0&&tail<1;
     sgEnd.setAttribute('stop-color',f<.6?'#8a4d1c':'#b67a3e');
     if(!flowing){streamA.setAttribute('d','');streamB.setAttribute('d','');}
     else{
-      var yb=SY0+(surf-SY0)*Lr, yt=SY0+(surf-SY0)*tail, w=1.05*(1-tail*.35)*(draining?.85:1);
-      stream(streamA,SX-4.5,yt,yb,w,t,0); stream(streamB,SX+4.5,yt,yb,w,t,1.7);
+      var yb=SY0+(surf-SY0)*Lr, yt=SY0+(surf-SY0)*tail, w=1.6*(1-tail*.35)*(draining?.85:1);
+      stream(streamA,SX-33,yt,yb,w,t,0); stream(streamB,SX+33,yt,yb,w,t,1.7);
     }
     var dOn=0,dy=0;
     if(sinceFull>.6&&sinceFull<1.1){var kk=(sinceFull-.6)/.5;dOn=1;dy=SY0+2+(surf-SY0)*kk*kk;}
-    dropA.setAttribute('cx',SX);dropA.setAttribute('cy',dy);dropA.setAttribute('opacity',dOn);
+    dropA.setAttribute('cx',SX-33);dropA.setAttribute('cy',dy);dropA.setAttribute('opacity',dOn);
     var rpl=(Lr>=1&&tail<1&&f>.05)?1:0;
     ripEls.forEach(function(el,i){
       var u=((t*1.2)+(draining?-i/3:i/3)+3)%1, uu=draining?1-u:u, rr=1.5+uu*14;
-      el.setAttribute('cx',SX);el.setAttribute('cy',surf-1);el.setAttribute('rx',rr);el.setAttribute('ry',rr*.22);
+      el.setAttribute('cx',614);el.setAttribute('cy',(gS-1).toFixed(2));el.setAttribute('rx',(rr*.62).toFixed(2));el.setAttribute('ry',(rr*.62*.2).toFixed(2));
       el.setAttribute('opacity',((1-uu)*.55*rpl).toFixed(3));
     });
     // the machine's touch screen: timer, progress and yield follow the cup both ways
@@ -242,7 +273,7 @@
     scrState.textContent=pour.F>=1?'Done':(pour.F>0||(seated&&pour.L>0)?'Brewing':'Ready');
     var sOn=reduce?0:(sinceFull<0?0:clamp((sinceFull-1)/1.5,0,1));
     steamEls.forEach(function(el,i){
-      var u=((t*.26)+i/3)%1, x0=643+i*15, sw=Math.sin(t*1.3+i*2.1), y0=646-u*28;
+      var u=((t*.26)+i/3)%1, x0=643+i*15, sw=Math.sin(t*1.3+i*2.1), y0=658-u*26;
       el.setAttribute('d','M'+x0+' '+y0+' C'+(x0+8*sw)+' '+(y0-28)+' '+(x0-10*sw)+' '+(y0-58)+' '+(x0+6*Math.sin(t*.9+i))+' '+(y0-92));
       el.setAttribute('opacity',(Math.sin(Math.PI*u)*.55*sOn).toFixed(3));
     });
@@ -274,8 +305,8 @@
     var fwd=t-G.fwdT<.22&&a<1&&G.g<.84, rev=t-G.revT<.22&&a>0;
     G.jit=(fwd||rev)?1:0;
     if(!reduce){
-      var n=Math.round((fwd||rev?520:0)*dt); for(var k=0;k<n;k++) spawnG(rev&&!fwd);
-      if(fwd&&Math.random()<dt*14) spawnD();
+      var n=0; for(var k=0;k<n;k++) spawnG(rev&&!fwd);
+      
     }
     GP.forEach(function(q){ if(!q.on) return;
       if(q.rev){q.vy+=140*dt; q.y+=q.vy*dt; q.x+=q.vx*dt; if(q.y<572||q.vy>0){q.on=false;q.el.style.display='none';return;}}
@@ -292,10 +323,10 @@
     }
   }
   // autoplay: glide from stage to stage with a short pause; the pour stage waits for the cup to fill
-  var STOPS=[0,.38,.86], MOVE=[0,3000,4400], PAUSES=[0,1700,600];
+  var END=.86, STOPS=[0,.38,END], MOVE=[0,3000,3400], PAUSES=[0,1700,600];
   var auto={on:false,armed:false,touched:false,done:false,timer:null,anim:null,idle:null};
   function resume(){ if(auto.done) return; auto.on=true; queue();}
-  function storyY(p){var r=story.getBoundingClientRect();return scrollY+r.top+p*(story.offsetHeight-innerHeight);}
+  function storyY(p){var r=story.getBoundingClientRect();return scrollY+r.top+(p/END)*(story.offsetHeight-innerHeight);}
   function nextStop(){for(var i=0;i<STOPS.length;i++){if(STOPS[i]>targetP+.008)return i;}return -1;}
   function markNext(i,ms){dots.forEach(function(d,j){d.classList.remove('next');d.style.removeProperty('--wait');});
     if(i>0&&dots[i]){dots[i].style.setProperty('--wait',ms+'ms'); void dots[i].offsetWidth; dots[i].classList.add('next');}}
@@ -324,16 +355,14 @@
     auto.touched=true;
     auto.on=false; clearTimeout(auto.timer); cancelAnimationFrame(auto.anim); auto.anim=null; markNext(-1);
     clearTimeout(auto.idle);
-    // the visitor is in charge while they scroll; if they stop, the story carries on by itself
-    if(auto.armed) auto.idle=setTimeout(resume,4000);
+    if(auto.armed) auto.idle=setTimeout(function(){if(!paused) resume();},4000);
   }
   ['wheel','touchstart','pointerdown','keydown'].forEach(function(ev){addEventListener(ev,userTook,{passive:true});});
   var ticking=false;
   function frame(){
     ticking=false;
     var r=story.getBoundingClientRect(), total=story.offsetHeight-innerHeight;
-    targetP=clamp(-r.top/total,0,1);
-    // autoplay waits for the visitor: it only starts once they have scrolled into the story themselves
+    targetP=clamp(-r.top/total,0,1)*END;
     if(!reduce&&!auto.done&&!auto.armed&&auto.touched&&targetP>.004){auto.armed=true; clearTimeout(auto.idle); auto.idle=setTimeout(resume,900);}
     nav.classList.toggle('solid', scrollY>20); nav.classList.toggle('over-hero', r.bottom>80 && document.querySelector('main[data-page="home"]') && !document.querySelector('main[data-page="home"]').hidden);
     hint.style.opacity=targetP>0.03?0:1;
@@ -346,6 +375,7 @@
   function req(){ if(!ticking){ticking=true;requestAnimationFrame(frame);} }
   addEventListener('scroll',req,{passive:true}); addEventListener('resize',function(){first=true;placeVeil();req();}); placeVeil();
   frame(); P=targetP; apply(P); requestAnimationFrame(loop);
+
 
   // anatomy
   var items=[].slice.call(document.querySelectorAll('.parts li')), pts=[].slice.call(document.querySelectorAll('.pt'));
