@@ -322,9 +322,10 @@
       scrG.textContent=(18*a).toFixed(1).replace('.0','')+' g'; scrBar.setAttribute('width',(114*a).toFixed(1)); scrTime.textContent='0:00';
     }
   }
+  // autoplay is off (done:true): the page never moves on its own; kept only so the hooks stay intact
   // autoplay: glide from stage to stage with a short pause; the pour stage waits for the cup to fill
   var END=.86, STOPS=[0,.38,END], MOVE=[0,3000,3400], PAUSES=[0,1700,600];
-  var auto={on:false,armed:false,touched:false,done:false,timer:null,anim:null,idle:null};
+  var auto={on:false,armed:false,touched:false,done:true,timer:null,anim:null,idle:null};
   function resume(){ if(auto.done) return; auto.on=true; queue();}
   function storyY(p){var r=story.getBoundingClientRect();return scrollY+r.top+(p/END)*(story.offsetHeight-innerHeight);}
   function nextStop(){for(var i=0;i<STOPS.length;i++){if(STOPS[i]>targetP+.008)return i;}return -1;}
