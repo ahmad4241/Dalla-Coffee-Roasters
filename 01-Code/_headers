@@ -1,0 +1,9 @@
+# Speed: let phones keep images and icons instead of re-asking the server on every visit
+/images/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+
+/icon-*.png
+  Cache-Control: public, max-age=2592000
+
+/og-image.jpg
+  Cache-Control: public, max-age=2592000
