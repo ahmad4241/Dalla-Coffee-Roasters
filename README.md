@@ -4,7 +4,7 @@ Website for **Dalla Coffee Roasters**: a scroll-animated hero in four stages (be
 
 **Live site:** https://dalla-coffee-roasters.netlify.app (hosted on Netlify from this repo)
 
-Preview on Claude (v26): https://claude.ai/artifact/766hzJCTeosYU8U7r6QZpo
+**Built with:** HTML, CSS and plain JavaScript, no frameworks. Designed and built by [Ahmad Alhallak](https://ahmadalhallak.com) with AI assistance (Claude). Images generated with Gemini.
 
 ## Folders
 
@@ -14,8 +14,6 @@ Preview on Claude (v26): https://claude.ai/artifact/766hzJCTeosYU8U7r6QZpo
 | `01-Code/images/` | the 21 images the site loads (machine layers, beans, dosing cup, bags, drinks) |
 | `02-Images/` | the original Gemini images, full size (machine photos, drinks, bags, empty scene) |
 | `03-Versions/` | full zip of each release |
-
-The same structure is mirrored in Google Drive under **Dalla Coffee Roasters** (01 Code, 02 Images, 03 Versions).
 
 ## Run it
 
